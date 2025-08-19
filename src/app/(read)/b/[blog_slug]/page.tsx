@@ -45,6 +45,20 @@ export default async function SingleBlogPage({ params }: Props) {
   try {
     const { course, slides } = await loadBlog(blog_slug);
     return (
+        <Container>
+            {slides?.content && (
+                <Suspense fallback={<Skeleton className="h-64 w-full mb-8" />}>
+                    <Display data={slides.content}/>
+                </Suspense>
+            )}
+
+            {course?.content && (
+                <article className='prose prose-neutral lg:prose-xl mx-auto mt-8'>
+                    <div dangerouslySetInnerHTML={{__html: course.content}}/>
+                </article>
+            )}
+        </Container>
+    );
       <Container>
         <div className="mb-4 flex justify-end">
           <CoursesLink />
