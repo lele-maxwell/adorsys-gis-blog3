@@ -59,8 +59,8 @@ export function AppNavBar() {
   return (
     <div className="sticky top-0 z-40 bg-white/10 backdrop-blur-xl border-b border-white/20">
       <Container className="py-0">
-        <nav className="navbar">
-          <div className="navbar-start flex gap-3 sm:gap-4">
+        <nav className="navbar flex-wrap gap-2 sm:gap-0">
+          <div className="navbar-start flex flex-wrap gap-3 sm:gap-4">
             <Link href="/" className="group flex flex-row items-center gap-2" aria-label="Go to home">
               <Image src={icon} className="w-7 sm:w-8 transition-transform duration-200 group-hover:scale-110" alt="logo" />
               <span className="text-lg sm:text-xl font-extrabold uppercase text-white/90 transition-colors duration-200 group-hover:text-primary">
