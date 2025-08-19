@@ -4,8 +4,8 @@ import { loadBlog } from "@blog/converters";
 import { Container } from "@blog/components/container";
 import { Pagination } from "@blog/components/pagination";
 import { getSlidePreviewHtmls } from "@blog/server/blog/slide-preview";
-import { CoursesHeader } from "./CoursesHeader";
-import { CourseCard } from "@blog/components/course";
+import { CoursesHeader } from "./CoursesHeader.client";
+import { CourseCard } from "@blog/components/course/course-card.client";
 
 export const dynamic = "force-dynamic";
 
