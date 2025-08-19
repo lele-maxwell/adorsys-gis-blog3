@@ -46,14 +46,13 @@ export default async function SingleBlogPage({params}: Props) {
     const {course, slides} = await loadBlog(blog_slug);
     return (
         <Container>
-            {/* language badge intentionally omitted on blog page per requirements */}
-            {slides && (
+            {slides?.content && (
                 <Suspense fallback={<Skeleton className="h-64 w-full mb-8" />}>
                     <Display data={slides.content}/>
                 </Suspense>
             )}
 
-            {course.content && (
+            {course?.content && (
                 <article className='prose prose-neutral lg:prose-xl mx-auto mt-8'>
                     <div dangerouslySetInnerHTML={{__html: course.content}}/>
                 </article>
