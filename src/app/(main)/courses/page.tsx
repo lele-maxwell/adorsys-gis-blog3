@@ -4,15 +4,8 @@ import { loadBlog } from "@blog/converters";
 import { Container } from "@blog/components/container";
 import { Pagination } from "@blog/components/pagination";
 import { getSlidePreviewHtmls } from "@blog/server/blog/slide-preview";
-import nextDynamic from "next/dynamic";
-
-const CoursesHeader = nextDynamic(() => import("./CoursesHeader").then(m => m.CoursesHeader), {
-  ssr: false,
-});
-const CourseCard = nextDynamic(
-  () => import("@blog/components/course/course-card").then((m) => m.CourseCard),
-  { ssr: false }
-);
+import { CoursesHeader } from "./CoursesHeader";
+import { CourseCard } from "@blog/components/course";
 
 export const dynamic = "force-dynamic";
 
