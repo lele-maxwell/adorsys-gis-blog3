@@ -2,10 +2,17 @@
 import { getAllBlogs } from "@blog/server/blog";
 import { loadBlog } from "@blog/converters";
 import { Container } from "@blog/components/container";
-import { CourseCard } from "@blog/components/course";
 import { Pagination } from "@blog/components/pagination";
 import { getSlidePreviewHtmls } from "@blog/server/blog/slide-preview";
-import { CoursesHeader } from "./CoursesHeader";
+import dynamic from "next/dynamic";
+
+const CoursesHeader = dynamic(() => import("./CoursesHeader").then(m => m.CoursesHeader), {
+  ssr: false,
+});
+const CourseCard = dynamic(
+  () => import("@blog/components/course/course-card").then((m) => m.CourseCard),
+  { ssr: false }
+);
 
 export const dynamic = "force-dynamic";
 
