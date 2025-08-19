@@ -4,12 +4,12 @@ import { loadBlog } from "@blog/converters";
 import { Container } from "@blog/components/container";
 import { Pagination } from "@blog/components/pagination";
 import { getSlidePreviewHtmls } from "@blog/server/blog/slide-preview";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 
-const CoursesHeader = dynamic(() => import("./CoursesHeader").then(m => m.CoursesHeader), {
+const CoursesHeader = nextDynamic(() => import("./CoursesHeader").then(m => m.CoursesHeader), {
   ssr: false,
 });
-const CourseCard = dynamic(
+const CourseCard = nextDynamic(
   () => import("@blog/components/course/course-card").then((m) => m.CourseCard),
   { ssr: false }
 );
