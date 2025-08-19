@@ -76,10 +76,10 @@ export default async function CoursesPage({ searchParams }: Props) {
 
   return (
     <Container>
-      <div className="mb-6 space-y-4">
+      <div className="mb-8 sm:mb-10 space-y-4">
         <CoursesHeader total={total} />
       </div>
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:gap-7 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {pageItems.map(({ slug, title, description, lang, previews }) => (
           <CourseCard
             key={slug}
@@ -93,7 +93,7 @@ export default async function CoursesPage({ searchParams }: Props) {
         ))}
       </div>
       {pageCount > 1 && (
-        <div className="mt-10 flex items-center justify-center">
+        <div className="mt-8 sm:mt-10 flex items-center justify-center">
           <Pagination
             currentPage={current}
             totalPages={pageCount}
