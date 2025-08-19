@@ -34,16 +34,16 @@ export default function SearchPage() {
   return (
     <Container>
       <div className="mb-6 space-y-4">
-        <h1 className="mb-4 text-3xl font-bold">{t("search.title")}</h1>
+        <h1 className="mb-4 text-2xl sm:text-3xl font-bold">{t("search.title")}</h1>
         <form
-          className="flex items-center gap-2"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2"
           onSubmit={(e) => {
             e.preventDefault();
           }}
           ref={formRef}
         >
           <div
-            className="flex w-full items-center rounded-full px-5 py-2.5 backdrop-blur-xl
+            className="flex w-full items-center rounded-full px-4 sm:px-5 py-2.5 backdrop-blur-xl
                        ring-1 ring-white/20 focus-within:ring-primary/40
                        bg-gradient-to-r from-white/10 via-white/5 to-white/10
                        shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
@@ -56,8 +56,8 @@ export default function SearchPage() {
               aria-label="Search"
               ref={inputRef}
             />
-            <div className="mx-3 h-6 w-px bg-white/20" />
-            <div className="relative">
+            <div className="mx-3 h-6 w-px bg-white/20 hidden sm:block" />
+            <div className="relative hidden sm:block">
               <button
                 type="button"
                 className="hidden sm:flex items-center gap-1 rounded-full px-3 py-1 text-white/85 hover:bg-white/10"
@@ -102,7 +102,7 @@ export default function SearchPage() {
             {enabled ? (
               <button
                 type="button"
-                className="ml-2 inline-flex h-11 w-11 items-center justify-center rounded-full btn btn-accent btn-circle min-h-0 border-0 shadow-[0_8px_30px_rgba(23,227,206,0.35)]"
+                className="ml-2 inline-flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full btn btn-accent btn-circle min-h-0 border-0 shadow-[0_8px_30px_rgba(23,227,206,0.35)]"
                 aria-label="Clear search"
                 title="Clear search"
                 onClick={() => {
@@ -115,7 +115,7 @@ export default function SearchPage() {
             ) : (
               <button
                 type="submit"
-                className="ml-2 inline-flex h-11 w-11 items-center justify-center rounded-full btn btn-accent btn-circle min-h-0 border-0 shadow-[0_8px_30px_rgba(23,227,206,0.35)]"
+                className="ml-2 inline-flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full btn btn-accent btn-circle min-h-0 border-0 shadow-[0_8px_30px_rgba(23,227,206,0.35)]"
                 aria-label="Submit search"
                 title="Search"
               >
@@ -133,21 +133,19 @@ export default function SearchPage() {
             {!isFetching && data && data.length === 0 && (
               <div className="text-sm opacity-70">{t("search.noResults")}</div>
             )}
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {data?.map(
-                ({ slug, title, description, lang, tags, previews }) => (
-                  <CourseCard
-                    key={slug}
-                    slug={slug}
-                    title={title}
-                    description={description}
-                    lang={lang}
-                    tags={tags}
-                    slide1Html={previews?.firstHtml}
-                    slide2Html={previews?.secondHtml}
-                  />
-                )
-              )}
+            <div className="grid grid-cols-1 gap-6 sm:gap-7 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {data?.map(({ slug, title, description, lang, tags, previews }) => (
+                <CourseCard
+                  key={slug}
+                  slug={slug}
+                  title={title}
+                  description={description}
+                  lang={lang}
+                  tags={tags}
+                  slide1Html={previews?.firstHtml}
+                  slide2Html={previews?.secondHtml}
+                />
+              ))}
             </div>
           </div>
         )}
