@@ -17,8 +17,8 @@ export default async function Home() {
 
       {/* Foreground wrapper - restructured to match console layout */}
       <div className="relative overflow-hidden">
-        <div className="container mx-auto p-4 relative z-10 ml-0 md:ml-24">
-          <div className="flex flex-col lg:flex-row items-center min-h-[calc(100vh-120px)] gap-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 relative z-10 ml-0 md:ml-24">
+          <div className="flex flex-col lg:flex-row items-center min-h-[calc(100vh-120px)] gap-10 sm:gap-12 lg:gap-16">
             {/* Left: Heading and CTA */}
             <HomeHero />
 

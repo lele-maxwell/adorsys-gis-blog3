@@ -72,7 +72,7 @@ export function Pagination({
   return (
     <nav
       aria-label="Course navigation"
-      className="glass-surface flex items-center gap-1 rounded-2xl px-3 py-2 backdrop-saturate-150 sm:gap-2 md:gap-3"
+      className="glass-surface flex items-center justify-center gap-1 sm:gap-2 md:gap-3 rounded-2xl px-2.5 sm:px-3 py-2 backdrop-saturate-150 flex-wrap"
     >
       {/* Previous */}
       <Link
@@ -81,13 +81,13 @@ export function Pagination({
         aria-disabled={isPrevDisabled}
         aria-label={t("Previous Page")}
         tabIndex={isPrevDisabled ? -1 : 0}
-        className={`group particle-deconstruct relative rounded-xl border border-transparent px-2 py-2 font-medium text-sm backdrop-blur-md transition-all duration-300 sm:px-3 sm:py-2.5 md:px-4 ${
+        className={`group particle-deconstruct relative rounded-xl border border-transparent px-2 py-2 font-medium text-sm backdrop-blur-md transition-all duration-300 sm:px-3 sm:py-2.5 md:px-4 min-w-[2.5rem] text-center ${
           isPrevDisabled
             ? "pointer-events-none cursor-not-allowed text-neutral-400 opacity-50"
             : "text-neutral-400 hover:border-white/20 hover:bg-white/10 hover:text-white"
         }`}
       >
-        <span className="flex items-center gap-1">
+        <span className="flex items-center justify-center gap-1">
           <svg
             aria-hidden="true"
             width="14"
@@ -104,12 +104,12 @@ export function Pagination({
               strokeLinejoin="round"
             />
           </svg>
-          <span>{t("Previous")}</span>
+          <span className="hidden xs:inline">{t("Previous")}</span>
         </span>
       </Link>
 
       {/* Pages */}
-      <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2">
+      <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 flex-wrap justify-center">
         {visiblePages.map((page) => (
           <Link
             key={page}
@@ -120,7 +120,7 @@ export function Pagination({
                 ? t("Current Page {{page}}", { page })
                 : t("Go to Page {{page}}", { page })
             }
-            className={`group particle-deconstruct relative rounded-xl border px-2 py-2 font-medium text-xs backdrop-blur-md transition-all duration-300 hover:scale-105 sm:px-3 sm:py-2.5 sm:text-sm md:px-4 ${
+            className={`group particle-deconstruct relative rounded-xl border px-2 py-2 font-medium text-xs backdrop-blur-md transition-all duration-300 hover:scale-105 sm:px-3 sm:py-2.5 sm:text-sm md:px-4 min-w-[2.25rem] text-center ${
               page === currentPage
                 ? "border-primary/40 bg-gradient-to-r from-primary/30 to-secondary/30 text-base-content shadow-lg shadow-primary/20 hover:border-primary/60 hover:from-primary/40 hover:to-secondary/40 hover:shadow-primary/30 hover:shadow-xl"
                 : "border-transparent text-neutral-400 hover:border-white/20 hover:bg-white/10 hover:text-base-content"
@@ -145,14 +145,14 @@ export function Pagination({
         aria-disabled={isNextDisabled}
         aria-label={t("Next Page")}
         tabIndex={isNextDisabled ? -1 : 0}
-        className={`group particle-deconstruct relative rounded-xl border border-transparent px-2 py-2 font-medium text-sm backdrop-blur-md transition-all duration-300 sm:px-3 sm:py-2.5 md:px-4 ${
+        className={`group particle-deconstruct relative rounded-xl border border-transparent px-2 py-2 font-medium text-sm backdrop-blur-md transition-all duration-300 sm:px-3 sm:py-2.5 md:px-4 min-w-[2.5rem] text-center ${
           isNextDisabled
             ? "pointer-events-none cursor-not-allowed text-neutral-400 opacity-50"
             : "text-neutral-400 hover:border-white/20 hover:bg-white/10 hover:text-white"
         }`}
       >
-        <span className="flex items-center gap-1">
-          <span>{t("Next")}</span>
+        <span className="flex items-center justify-center gap-1">
+          <span className="hidden xs:inline">{t("Next")}</span>
           <svg
             aria-hidden="true"
             width="14"
