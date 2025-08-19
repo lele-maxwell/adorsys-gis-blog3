@@ -1,8 +1,12 @@
 import { AppNavBar } from "@blog/components/navbar";
 import LargeFooter from "../../components/footer/large-footer";
 import type { PropsWithChildren } from "react";
-import VerticalNav from "@blog/components/side/vertical-nav";
+import dynamic from "next/dynamic";
 import { Suspense } from "react";
+
+const VerticalNav = dynamic(() => import("@blog/components/side/vertical-nav"), {
+  ssr: false,
+});
 
 export default function MainLayout({ children }: Readonly<PropsWithChildren>) {
   return (
