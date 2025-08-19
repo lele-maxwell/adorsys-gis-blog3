@@ -11,15 +11,10 @@ export default function LargeFooter() {
   return (
     <div className="bg-base-300">
       <Container>
-        <footer className="footer sm:footer-horizontal sm:p-10">
-          <aside>
-            <Image
-              src={icon}
-              className="fill-current w-24 h-24"
-              alt={t("footer.logo") ?? "logo"}
-            />
-
-            <p>
+        <footer className="footer sm:footer-horizontal px-2 sm:px-0 py-6 sm:py-10 gap-6">
+          <aside className="max-w-sm">
+            <Image src={icon} className="fill-current w-20 h-20 sm:w-24 sm:h-24" alt={t("footer.logo") ?? "logo"} />
+            <p className="mt-2 text-sm opacity-80">
               {t("footer.copyright", { year: new Date().getFullYear() })}
               <br />
               {t("footer.rights")}
