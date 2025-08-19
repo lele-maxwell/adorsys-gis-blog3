@@ -3,16 +3,20 @@ import "@blog/i18n/boot";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Home, BookOpen, Search } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 export default function VerticalNav() {
   const pathname = usePathname();
   const { t } = useTranslation();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const tr = (key: string): string => (mounted ? (t(key) as unknown as string) : "");
   const items = [
-    { href: "/", label: t("nav.home"), icon: Home },
-    { href: "/courses", label: t("nav.courses"), icon: BookOpen },
-    { href: "/search", label: t("nav.search"), icon: Search },
+    { href: "/", label: tr("nav.home"), icon: Home },
+    { href: "/courses", label: tr("nav.courses"), icon: BookOpen },
+    { href: "/search", label: tr("nav.search"), icon: Search },
   ];
 
   return (
@@ -36,7 +40,7 @@ export default function VerticalNav() {
                 >
                   <Icon className="w-5 h-5 group-hover:text-primary" />
                 </div>
-                <span
+                <span suppressHydrationWarning
                   className={`text-xs ${
                     active
                       ? "text-primary"

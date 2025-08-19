@@ -11,7 +11,7 @@ export default function LargeFooter() {
   const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  const tr = (key: string, options?: any) => (mounted ? t(key, options) : "");
+  const tr = (key: string, options?: any): string => (mounted ? (t(key, options) as unknown as string) : "");
   return (
     <div className="bg-base-300">
       <Container>
