@@ -29,7 +29,7 @@ export function PaginationNuqs({
   maxVisiblePages = 5,
   onPageChange,
 }: Readonly<PaginationNuqsProps>) {
-  const { t } = useTranslation();
+  const { t, ready } = useTranslation();
 
   const visiblePages = useMemo(
     () => computeVisiblePages(currentPage, totalPages, maxVisiblePages),
@@ -53,6 +53,29 @@ export function PaginationNuqs({
     }
   };
 
+  const label = (key: string, vars?: Record<string, unknown>) => {
+    if (!ready || !t) {
+      switch (key) {
+        case "Previous Page":
+          return "Previous Page";
+        case "Previous":
+          return "Previous";
+        case "Current Page {{page}}":
+          return `Current Page ${String(vars?.page ?? "")}`;
+        case "Go to Page {{page}}":
+          return `Go to Page ${String(vars?.page ?? "")}`;
+        case "Next Page":
+          return "Next Page";
+        case "Next":
+          return "Next";
+        default:
+          return key;
+      }
+    }
+    // @ts-ignore
+    return t(key, vars);
+  };
+
   return (
     <nav
       aria-label="Course navigation"
@@ -62,7 +85,7 @@ export function PaginationNuqs({
       <button
         onClick={isPrevDisabled ? preventIfDisabled(true) : handlePageClick(Math.max(1, currentPage - 1))}
         disabled={isPrevDisabled}
-        aria-label={t("Previous Page")}
+        aria-label={label("Previous Page")}
         className={`${
           isPrevDisabled ? "cursor-not-allowed text-neutral-600" : "hover:text-white"
         } rounded-lg px-3 py-2 text-base sm:px-2 sm:py-1.5 sm:text-sm`}
@@ -84,7 +107,7 @@ export function PaginationNuqs({
               strokeLinejoin="round"
             />
           </svg>
-          <span className="hidden sm:inline">{t("Previous")}</span>
+          <span className="hidden sm:inline">{label("Previous")}</span>
         </span>
       </button>
 
@@ -97,8 +120,8 @@ export function PaginationNuqs({
             aria-current={page === currentPage ? "page" : undefined}
             aria-label={
               page === currentPage
-                ? t("Current Page {{page}}", { page })
-                : t("Go to Page {{page}}", { page })
+                ? label("Current Page {{page}}", { page })
+                : label("Go to Page {{page}}", { page })
             }
             className={`${
               page === currentPage
@@ -115,13 +138,13 @@ export function PaginationNuqs({
       <button
         onClick={isNextDisabled ? preventIfDisabled(true) : handlePageClick(Math.min(totalPages, currentPage + 1))}
         disabled={isNextDisabled}
-        aria-label={t("Next Page")}
+        aria-label={label("Next Page")}
         className={`${
           isNextDisabled ? "cursor-not-allowed text-neutral-600" : "hover:text-white"
         } rounded-lg px-3 py-2 text-base sm:px-2 sm:py-1.5 sm:text-sm`}
       >
         <span className="flex items-center gap-1">
-          <span className="hidden sm:inline">{t("Next")}</span>
+          <span className="hidden sm:inline">{label("Next")}</span>
           <svg
             aria-hidden="true"
             width="16"

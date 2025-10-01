@@ -30,7 +30,7 @@ export function Pagination({
   baseUrl,
   maxVisiblePages = 5,
 }: Readonly<PaginationProps>) {
-  const { t } = useTranslation();
+  const { t, ready } = useTranslation();
   const searchParams = useSearchParams();
 
   const visiblePages = useMemo(
@@ -62,6 +62,30 @@ export function Pagination({
     }
   };
 
+  // Ensure stable labels; if i18n not ready, use English strings to match server
+  const label = (key: string, vars?: Record<string, unknown>) => {
+    if (!ready || !t) {
+      switch (key) {
+        case "Previous Page":
+          return "Previous Page";
+        case "Previous":
+          return "Previous";
+        case "Current Page {{page}}":
+          return `Current Page ${String(vars?.page ?? "")}`;
+        case "Go to Page {{page}}":
+          return `Go to Page ${String(vars?.page ?? "")}`;
+        case "Next Page":
+          return "Next Page";
+        case "Next":
+          return "Next";
+        default:
+          return key;
+      }
+    }
+    // @ts-ignore
+    return t(key, vars);
+  };
+
   return (
     <nav
       aria-label="Course navigation"
@@ -72,7 +96,7 @@ export function Pagination({
         href={getPageUrl(Math.max(1, currentPage - 1))}
         onClick={preventIfDisabled(isPrevDisabled)}
         aria-disabled={isPrevDisabled}
-        aria-label={t("Previous Page")}
+        aria-label={label("Previous Page")}
         tabIndex={isPrevDisabled ? -1 : 0}
         className={`${
           isPrevDisabled ? "pointer-events-none cursor-not-allowed text-neutral-600" : "hover:text-white"
@@ -95,7 +119,7 @@ export function Pagination({
               strokeLinejoin="round"
             />
           </svg>
-          <span className="hidden sm:inline">{t("Previous")}</span>
+          <span className="hidden sm:inline">{label("Previous")}</span>
         </span>
       </Link>
 
@@ -108,8 +132,8 @@ export function Pagination({
             aria-current={page === currentPage ? "page" : undefined}
             aria-label={
               page === currentPage
-                ? t("Current Page {{page}}", { page })
-                : t("Go to Page {{page}}", { page })
+                ? label("Current Page {{page}}", { page })
+                : label("Go to Page {{page}}", { page })
             }
             className={`${
               page === currentPage
@@ -127,14 +151,14 @@ export function Pagination({
         href={getPageUrl(Math.min(totalPages, currentPage + 1))}
         onClick={preventIfDisabled(isNextDisabled)}
         aria-disabled={isNextDisabled}
-        aria-label={t("Next Page")}
+        aria-label={label("Next Page")}
         tabIndex={isNextDisabled ? -1 : 0}
         className={`${
           isNextDisabled ? "pointer-events-none cursor-not-allowed text-neutral-600" : "hover:text-white"
         } rounded-lg px-3 py-2 text-base sm:px-2 sm:py-1.5 sm:text-sm`}
       >
         <span className="flex items-center gap-1">
-          <span className="hidden sm:inline">{t("Next")}</span>
+          <span className="hidden sm:inline">{label("Next")}</span>
           <svg
             aria-hidden="true"
             width="16"

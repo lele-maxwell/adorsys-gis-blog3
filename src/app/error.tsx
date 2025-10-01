@@ -1,5 +1,4 @@
 "use client"; // Error components must be Client Components
-import "@blog/i18n/boot";
 
 import Link from "next/link";
 import { useEffect, useMemo } from "react";

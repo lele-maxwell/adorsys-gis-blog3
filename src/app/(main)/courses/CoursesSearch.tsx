@@ -1,5 +1,4 @@
 "use client";
-import "@blog/i18n/boot";
 
 import { useRef, useState, type PropsWithChildren } from "react";
 import { api } from "@blog/trpc/react";
@@ -8,7 +7,8 @@ import { Search as SearchIcon, X as ClearIcon } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 export function CoursesSearch({ children }: PropsWithChildren) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n, ready } = useTranslation();
+  const get = (key: string) => (ready ? t(key) : key);
   const [query, setQuery] = useState("");
   const enabled = query.trim().length > 0;
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -36,7 +36,7 @@ export function CoursesSearch({ children }: PropsWithChildren) {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={t("search.placeholder")}
+              placeholder={get("search.placeholder")}
               className="flex-1 bg-transparent text-white placeholder-white/70 outline-none text-xs sm:text-sm"
               aria-label="Search"
               ref={inputRef}
@@ -71,10 +71,10 @@ export function CoursesSearch({ children }: PropsWithChildren) {
       {enabled ? (
         <div className="mt-12 sm:mt-16 md:mt-24 xl:mt-28">
           {isFetching && (
-            <div className="text-xs sm:text-sm opacity-70">{t("search.searching")}</div>
+            <div className="text-xs sm:text-sm opacity-70">{get("search.searching")}</div>
           )}
           {!isFetching && data && data.length === 0 && (
-            <div className="text-xs sm:text-sm opacity-70">{t("search.noResults")}</div>
+            <div className="text-xs sm:text-sm opacity-70">{get("search.noResults")}</div>
           )}
           <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {data?.map(({ slug, title, description, lang, tags, previews }) => (

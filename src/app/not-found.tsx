@@ -1,9 +1,7 @@
 "use client";
-
 import Link from "next/link";
 import { FileMinus, Search, Home } from "react-feather";
 import { useTranslation } from "react-i18next";
-import "@blog/i18n/boot";
 import { Container } from "@blog/components/container";
 
 export default function NotFound() {

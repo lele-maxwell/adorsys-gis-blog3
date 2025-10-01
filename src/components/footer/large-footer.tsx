@@ -7,23 +7,7 @@ import { GitHub, Linkedin, Send, Youtube } from "react-feather";
 
 export default function LargeFooter() {
   const { t, ready } = useTranslation();
-  
-  // Prevent hydration mismatch by showing fallback during translation loading
-  if (!ready) {
-    return (
-      <div className="bg-black/60 border-t border-white/10">
-        <Container>
-          <footer className="py-8 sm:py-10 text-white/85 sm:flex sm:justify-between sm:items-start">
-            <aside className="text-center sm:text-left mb-8 sm:mb-0">
-              <span className="block text-2xl sm:text-3xl lg:text-4xl font-extrabold uppercase text-white/90">
-                GIS Blog
-              </span>
-            </aside>
-          </footer>
-        </Container>
-      </div>
-    );
-  }
+  const get = (key: string) => (ready ? t(key) : key);
   
   return (
     <div className="bg-black/60 border-t border-white/10">
@@ -32,14 +16,14 @@ export default function LargeFooter() {
           <aside className="text-center sm:text-left mb-8 sm:mb-0">
             <Link href="/" aria-label="Go to Home" className="inline-block">
               <span className="block text-2xl sm:text-3xl lg:text-4xl font-extrabold uppercase text-white/90 hover:text-white transition-colors">
-                {t("nav.brand")}
+                {get("nav.brand")}
               </span>
             </Link>
 
             <p className="text-sm sm:text-base mt-2">
-              {t("footer.copyright", { year: new Date().getFullYear() })}
+              {ready ? t("footer.copyright", { year: new Date().getFullYear() }) : `copyright © ${new Date().getFullYear()}`}
               <br />
-              {t("footer.rights")}
+              {get("footer.rights")}
             </p>
           </aside>
 
@@ -90,24 +74,24 @@ export default function LargeFooter() {
           {/* Mobile: COMPANY and LEGAL on same line */}
           <div className="flex flex-row flex-wrap justify-center sm:hidden gap-8 mb-8 sm:mb-0">
             <nav className="text-center">
-              <h6 className="footer-title text-base">{t("footer.company")}</h6>
+              <h6 className="footer-title text-base">{get("footer.company")}</h6>
               <div className="flex flex-col gap-1">
                 <Link href="/res/faq" className="link link-hover text-sm">
-                  {t("footer.faq")}
+                  {get("footer.faq")}
                 </Link>
                 <Link href="/res/contact" className="link link-hover text-sm">
-                  {t("footer.contact")}
+                  {get("footer.contact")}
                 </Link>
               </div>
             </nav>
             <nav className="text-center">
-              <h6 className="footer-title text-base">{t("footer.legal")}</h6>
+              <h6 className="footer-title text-base">{get("footer.legal")}</h6>
               <div className="flex flex-col gap-1">
                 <Link href="/res/tos" className="link link-hover text-sm">
-                  {t("footer.terms")}
+                  {get("footer.terms")}
                 </Link>
                 <Link href="/res/privacy" className="link link-hover text-sm">
-                  {t("footer.privacy")}
+                  {get("footer.privacy")}
                 </Link>
               </div>
             </nav>
@@ -116,7 +100,7 @@ export default function LargeFooter() {
           {/* Desktop: Original horizontal layout */}
           <nav className="hidden sm:block text-left">
             <h6 className="footer-title text-base sm:text-lg">
-              {t("footer.company")}
+              {get("footer.company")}
             </h6>
 
             <div className="flex flex-col gap-1">
@@ -124,19 +108,19 @@ export default function LargeFooter() {
                 href="/res/faq"
                 className="link link-hover text-sm sm:text-base"
               >
-                {t("footer.faq")}
+                {get("footer.faq")}
               </Link>
               <Link
                 href="/res/contact"
                 className="link link-hover text-sm sm:text-base"
               >
-                {t("footer.contact")}
+                {get("footer.contact")}
               </Link>
             </div>
           </nav>
           <nav className="hidden sm:block text-left">
             <h6 className="footer-title text-base sm:text-lg">
-              {t("footer.legal")}
+              {get("footer.legal")}
             </h6>
 
             <div className="flex flex-col gap-1">
@@ -144,13 +128,13 @@ export default function LargeFooter() {
                 href="/res/tos"
                 className="link link-hover text-sm sm:text-base"
               >
-                {t("footer.terms")}
+                {get("footer.terms")}
               </Link>
               <Link
                 href="/res/privacy"
                 className="link link-hover text-sm sm:text-base"
               >
-                {t("footer.privacy")}
+                {get("footer.privacy")}
               </Link>
             </div>
           </nav>

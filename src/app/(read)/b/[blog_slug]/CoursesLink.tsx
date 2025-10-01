@@ -5,7 +5,7 @@ import { BookOpen } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 export function CoursesLink() {
-  const { t, i18n } = useTranslation();
+  const { t, i18n, ready } = useTranslation();
   const lng = (i18n.language || "en").toLowerCase();
   const short = lng.includes("-") ? lng.split("-")[0] : lng;
   const href = short !== "en" ? `/courses?lang=${short}` : "/courses";
@@ -18,7 +18,7 @@ export function CoursesLink() {
       <span className="mx-auto flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15 text-primary shadow-[0_0_20px_rgba(59,130,246,0.25)]">
         <BookOpen size={18} />
       </span>
-      <span className="font-medium">{t("nav.courses")}</span>
+      <span className="font-medium">{ready && t ? t("nav.courses") : "Courses"}</span>
     </Link>
   );
 }

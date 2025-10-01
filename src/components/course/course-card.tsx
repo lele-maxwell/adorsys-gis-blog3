@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 import { useReturnTo } from "@blog/components/navigation/useReturnTo";
 
 interface CourseCardProps {
@@ -29,25 +30,36 @@ export function CourseCard({
   returnTo,
 }: Readonly<CourseCardProps>) {
   const { t, i18n } = useTranslation();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const locale = (i18n?.language ?? "").trim() || undefined;
-  const formattedDate = (() => {
-    if (!date) return undefined;
-    const d = new Date(date);
-    if (Number.isNaN(d.getTime())) return undefined;
-    try {
-      return new Intl.DateTimeFormat(locale, {
-        year: "numeric",
-        month: "long",
-        day: "2-digit",
-      }).format(d);
-    } catch {
-      return d.toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "long",
-        day: "2-digit",
-      });
-    }
-  })();
+ const dateInfo = (() => {
+  if (!date) return undefined;
+  const d = new Date(date);
+  if (Number.isNaN(d.getTime())) return undefined;
+  try {
+    const local = new Intl.DateTimeFormat(locale, {
+      year: "numeric",
+      month: "long",
+      day: "2-digit",
+    }).format(d);
+    const iso = d.toISOString().slice(0, 10);
+    return { isoDate: iso, formattedDate: local };
+  } catch {
+    const local = d.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "2-digit",
+    });
+    const iso = d.toISOString().slice(0, 10);
+    return { isoDate: iso, formattedDate: local };
+  }
+})();
+
+// Now, safely destructure from 'dateInfo'.
+// If 'dateInfo' is undefined, use an empty object as a fallback to prevent the crash.
+const { isoDate, formattedDate } = dateInfo || {};
+
   const hasSlides =
     typeof (slide1Html ?? "") === "string" &&
     (slide1Html ?? "").trim().length > 0;

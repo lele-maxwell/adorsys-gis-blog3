@@ -1,6 +1,4 @@
 "use client";
-
-import "@blog/i18n/boot";
 import { useTranslation } from "react-i18next";
 import { Container } from "@blog/components/container";
 import Image from "next/image";
