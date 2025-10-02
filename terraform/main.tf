@@ -9,7 +9,7 @@ terraform {
       version = "~> 3.0"
     }
     null = {
-      source = "hashicorp/null"
+      source  = "hashicorp/null"
       version = "3.2.1"
     }
   }
@@ -92,7 +92,6 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# UPDATED: IAM Policy to allow Lambda to use the CACHE bucket correctly
 resource "aws_iam_role_policy" "lambda_s3_cache_policy" {
   name = "${var.project_name}-lambda-s3-cache-policy"
   role = aws_iam_role.lambda_role.id
@@ -101,11 +100,8 @@ resource "aws_iam_role_policy" "lambda_s3_cache_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow",
-        Action = [
-          "s3:GetObject",
-          "s3:PutObject"
-        ],
+        Effect   = "Allow",
+        Action   = ["s3:GetObject", "s3:PutObject"],
         Resource = "${aws_s3_bucket.blog_cache.arn}/*"
       },
       {
@@ -117,15 +113,29 @@ resource "aws_iam_role_policy" "lambda_s3_cache_policy" {
   })
 }
 
+resource "aws_iam_role_policy" "lambda_s3_assets_policy" {
+  name = "${var.project_name}-lambda-s3-assets-policy"
+  role = aws_iam_role.lambda_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "s3:GetObject",
+        Resource = "${aws_s3_bucket.blog_assets.arn}/*"
+      }
+    ]
+  })
+}
+
 # ----------------------------------------------------------------
-# NEW: Build step to copy i18n files into the Lambda source
+# Build Step & Zipping for Main Server Function
 # ----------------------------------------------------------------
 resource "null_resource" "prepare_lambda_source" {
   triggers = {
-    # Re-run this copy step whenever the source assets change
     assets_hash = local.assets_hash
   }
-
   provisioner "local-exec" {
     command = <<EOT
       mkdir -p ../.open-next/server-functions/default/public/i18n && \
@@ -134,20 +144,24 @@ resource "null_resource" "prepare_lambda_source" {
   }
 }
 
-# ----------------------------------------------------------------
-# Automatically Zip the Lambda Deployment Package
-# ----------------------------------------------------------------
 data "archive_file" "server_function_zip" {
-  # This dependency ensures the files are copied BEFORE zipping occurs.
-  depends_on = [null_resource.prepare_lambda_source]
-
+  depends_on  = [null_resource.prepare_lambda_source]
   type        = "zip"
   source_dir  = "../.open-next/server-functions/default"
   output_path = "../server-functions.zip"
 }
 
+# ----------------------------------------------------------------
+# Zipping for Image Optimization Function
+# ----------------------------------------------------------------
+data "archive_file" "image_optimization_zip" {
+  type        = "zip"
+  source_dir  = "../.open-next/image-optimization-function"
+  output_path = "../image-optimization-function.zip"
+}
+
 # -----------------------
-# Lambda Function
+# Main Lambda Function (SSR)
 # -----------------------
 resource "aws_lambda_function" "blog_server" {
   function_name = "${var.project_name}-server"
@@ -162,7 +176,6 @@ resource "aws_lambda_function" "blog_server" {
   timeout          = 30
   memory_size      = 1024
 
-  # UPDATED: Removed the unnecessary HTTP backend URL variable.
   environment {
     variables = {
       NODE_ENV            = "production"
@@ -183,6 +196,34 @@ resource "aws_lambda_function_url" "blog_server_url" {
     expose_headers    = ["*"]
     max_age           = 86400
   }
+}
+
+# ----------------------------------------------------------------
+# Lambda Function for Next.js Image Optimization
+# ----------------------------------------------------------------
+resource "aws_lambda_function" "blog_image_optimization" {
+  function_name = "${var.project_name}-image-optimization"
+  handler       = "index.handler"
+  runtime       = "nodejs20.x"
+  role          = aws_iam_role.lambda_role.arn
+
+  filename         = data.archive_file.image_optimization_zip.output_path
+  source_code_hash = data.archive_file.image_optimization_zip.output_base64sha256
+  architectures    = ["x86_64"]
+  publish          = true
+  timeout          = 25
+  memory_size      = 1536
+
+  environment {
+    variables = {
+      BUCKET_NAME = aws_s3_bucket.blog_assets.bucket
+    }
+  }
+}
+
+resource "aws_lambda_function_url" "blog_image_optimization_url" {
+  function_name      = aws_lambda_function.blog_image_optimization.function_name
+  authorization_type = "NONE"
 }
 
 # -----------------------
@@ -235,10 +276,52 @@ resource "aws_s3_object" "blog_assets_objects" {
     ".ico"   = "image/x-icon",
     ".woff"  = "font/woff",
     ".woff2" = "font/woff2",
-    ".ttf"   = "font/ttf"
+    ".ttf"   = "font/ttf",
+    ".webp"  = "image/webp",
+    ".gif"   = "image/gif"
   }, try(regex("\\.[^.]+$", each.value), ""), "application/octet-stream")
 
   cache_control = startswith(each.value, "_next/static/") ? "public, max-age=31536000, immutable" : "public, max-age=0, must-revalidate"
+}
+
+# ----------------------------------------------------------------
+# Data Sources & Custom Resource for CloudFront Cache Policies
+# ----------------------------------------------------------------
+data "aws_cloudfront_cache_policy" "caching_disabled" {
+  name = "Managed-CachingDisabled"
+}
+
+data "aws_cloudfront_cache_policy" "caching_optimized" {
+  name = "Managed-CachingOptimized"
+}
+
+# REPLACED data source with a custom resource for portability
+resource "aws_cloudfront_cache_policy" "image_optimization_policy" {
+  name        = "${var.project_name}-image-optimization-policy"
+  comment     = "Cache policy for Next.js Image Optimization"
+  default_ttl = 86400
+  max_ttl     = 31536000
+  min_ttl     = 0
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "none"
+    }
+    headers_config {
+      header_behavior = "whitelist"
+      headers {
+        items = ["Accept"]
+      }
+    }
+    query_strings_config {
+      query_string_behavior = "whitelist"
+      query_strings {
+        items = ["url", "w", "q"]
+      }
+    }
+    enable_accept_encoding_brotli = true
+    enable_accept_encoding_gzip   = true
+  }
 }
 
 # -----------------------
@@ -267,13 +350,35 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
     }
   }
 
+  origin {
+    origin_id   = "lambda-blog-image-optimization"
+    domain_name = trimsuffix(replace(aws_lambda_function_url.blog_image_optimization_url.function_url, "https://", ""), "/")
+    custom_origin_config {
+      http_port              = 443
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
   default_cache_behavior {
     target_origin_id       = "lambda-blog-server"
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    cache_policy_id        = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
+    cache_policy_id        = data.aws_cloudfront_cache_policy.caching_disabled.id
+  }
+
+  ordered_cache_behavior {
+    path_pattern           = "_next/image"
+    target_origin_id       = "lambda-blog-image-optimization"
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = true
+    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
+    cached_methods         = ["GET", "HEAD", "OPTIONS"]
+    # UPDATED to use our custom policy resource
+    cache_policy_id = aws_cloudfront_cache_policy.image_optimization_policy.id
   }
 
   ordered_cache_behavior {
@@ -283,7 +388,7 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
     compress               = true
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
   }
 
   ordered_cache_behavior {
@@ -293,10 +398,10 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
     compress               = true
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
   }
 
-  # ... (The rest of the image rule behaviors are the same and still correct) ...
+  # All the following rules for static assets use the CachingOptimized data source
   ordered_cache_behavior {
     path_pattern           = "*.png"
     target_origin_id       = "s3-blog-assets"
@@ -304,7 +409,7 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
     compress               = true
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
   }
   ordered_cache_behavior {
     path_pattern           = "*.jpg"
@@ -313,7 +418,7 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
     compress               = true
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
   }
   ordered_cache_behavior {
     path_pattern           = "*.jpeg"
@@ -322,7 +427,7 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
     compress               = true
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
   }
   ordered_cache_behavior {
     path_pattern           = "*.ico"
@@ -331,7 +436,7 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
     compress               = true
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
   }
   ordered_cache_behavior {
     path_pattern           = "*.svg"
@@ -340,7 +445,25 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
     compress               = true
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
+  }
+  ordered_cache_behavior {
+    path_pattern           = "*.webp"
+    target_origin_id       = "s3-blog-assets"
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = true
+    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
+    cached_methods         = ["GET", "HEAD", "OPTIONS"]
+    cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
+  }
+  ordered_cache_behavior {
+    path_pattern           = "*.gif"
+    target_origin_id       = "s3-blog-assets"
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = true
+    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
+    cached_methods         = ["GET", "HEAD", "OPTIONS"]
+    cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
   }
 
   restrictions {
@@ -402,4 +525,9 @@ output "lambda_url" {
 output "cache_bucket_name" {
   description = "The name of the S3 bucket used for OpenNext caching."
   value       = aws_s3_bucket.blog_cache.bucket
+}
+
+output "image_optimization_lambda_arn" {
+  description = "The ARN of the Image Optimization Lambda function."
+  value       = aws_lambda_function.blog_image_optimization.arn
 }

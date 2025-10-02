@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { loadRes } from "@blog/converters";
 import { Container } from "@blog/components/container";
+import TranslationsProvider from "@blog/i18n/TranslationsProvider";
+import { getTranslations } from "@blog/i18n/server";
 import { ResPageContent } from "./ResPageContent";
 
 export const dynamic = "force-dynamic";
@@ -46,12 +48,16 @@ export default async function ResourcePage({ params }: Props) {
 
   // Route known resource slugs to the translated content component
   if (["about", "contact", "faq", "privacy", "tos"].includes(slugStr)) {
+    const locale = "en"; // Or determine from params, cookies, headers
+    const { resources } = await getTranslations(locale);
     const content = await loadRes(slugStr);
     return (
-      <ResPageContent
-        type={slugStr as any}
-        contentHtml={content?.contentHtml}
-      />
+      <TranslationsProvider lng={locale} resources={resources}>
+        <ResPageContent
+          type={slugStr as any}
+          contentHtml={content?.contentHtml}
+        />
+      </TranslationsProvider>
     );
   }
 
