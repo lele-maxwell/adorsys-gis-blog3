@@ -78,7 +78,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "blog_cache_lifecycle" {
     # This action specifies that objects will be permanently deleted.
     expiration {
       # Objects will be deleted 7 days after they were created.
-      days = 7
+      days = 1
     }
   }
 }
