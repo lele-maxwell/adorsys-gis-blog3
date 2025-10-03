@@ -10,9 +10,6 @@ tags:
 ---
 
 
-
-# CLOUD PRACTICTIONAL ESSENTIALS - Slides
-
 ![Cloud Computing Overview](https://images.credly.com/images/00634f82-b07f-4bbd-a6bb-53de397fc3a6/twitter_thumb_201604_image.png)
 
 ---
@@ -23,6 +20,7 @@ tags:
 Cloud computing is the on-demand delivery of IT resources over the internet with pay-as-you-go pricing, offering scalability, elasticity, and reduced operational overhead. 
 
 ---  
+---
 
 ## MODULE 2: Introduction to Amazon EC2
 ![Cloud Computing Overview](https://digitalcloud.training/wp-content/uploads/2022/01/Amazon-EC2.jpg)
@@ -93,12 +91,12 @@ Authentication and authorization. AWS Shared Responsibility Model (customer: sec
 ---
 ## MODULE 10
 
-### Coming Soon ...
+### Comming Soon ...
 ---
 ## MODULE 11
 
-### Coming Soon ...
+### Comming Soon ...
 ---
 ## MODULE 13
 
-### Comming Soon ...
+### Coming Soon ...
