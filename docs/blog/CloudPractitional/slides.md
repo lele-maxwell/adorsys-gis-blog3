@@ -9,212 +9,96 @@ tags:
   - devops
 ---
 
+
+
 # CLOUD PRACTICTIONAL ESSENTIALS - Slides
 
 ![Cloud Computing Overview](https://images.credly.com/images/00634f82-b07f-4bbd-a6bb-53de397fc3a6/twitter_thumb_201604_image.png)
 
+---
 ## MODULE 1: Introduction to Cloud Computing
 
-### Introduction
-Principle: "Pay as you go"
+![Cloud Computing](https://static.vecteezy.com/system/resources/thumbnails/053/963/720/small_2x/a-glowing-digital-cloud-symbol-representing-data-storage-and-technology-png.png)
 
-### What is Cloud Computing?
-On-demand delivery of IT resources over the internet with pay-as-you-go pricing.
+Cloud computing is the on-demand delivery of IT resources over the internet with pay-as-you-go pricing, offering scalability, elasticity, and reduced operational overhead. 
 
-### Cloud Deployment Types
-- Cloud-based deployment: Fully in the cloud.
-- On-premises deployment: Fully in your location.
-- Hybrid deployment: Combination of both.
-
-### 6 Key Benefits of Cloud Computing
-Pay-as-you-go, massive economies of scale, stop guessing capacity, increased speed and agility, stop spending money running and maintaining data centers, go global in minutes.
-
-### AWS Global Infrastructure
-High availability and fault tolerance. Regions and Availability Zones.
-
-### AWS Shared Responsibility Model
-Defines who is responsible for what when running workloads in the cloud.
+---  
 
 ## MODULE 2: Introduction to Amazon EC2
+![Cloud Computing Overview](https://digitalcloud.training/wp-content/uploads/2022/01/Amazon-EC2.jpg)
 
-### Introduction to Amazon EC2
 EC2 instances are virtual machines (VMs) with multi-tenancy. Highly flexible, cost-effective, quick.
 
-### Types of EC2 Instances
-General purpose, compute optimized, memory optimized, accelerated computing, storage optimized.
-
-### How to Provision AWS Resources
-AWS Management Console, AWS CLI.
-
-### Configure and Launch an EC2 Instance
-Amazon Machine Images (AMIs) provide pre-built virtual machine images.
-
-### Amazon EC2 Pricing
-On-demand, Savings Plans, Reserved Instances, Spot Instances, Dedicated Hosts, Dedicated Instances.
-
-### Scalability and Elasticity in Amazon EC2
-Scalability (grow over time) vs. Elasticity (dynamic adjustment). Scale out (horizontal) vs. Scale up (vertical). Amazon EC2 Auto Scaling.
-
-### Directing Traffic with Elastic Load Balancing
-ELB distributes traffic across multiple resources, works with Auto Scaling.
-
-### Messaging and Queuing
-Monolithic vs. Microservices architecture. Amazon EventBridge, Amazon SQS, Amazon SNS for scalable communication.
+---
 
 ## MODULE 3: Introduction to Serverless Computing
 
-### Introduction to Serverless Computing
+![Cloud Computing Overview](https://topnotchitconsultant.com/wp-content/uploads/2024/08/s-c-1.png)
+
+
+
 Run applications without managing underlying infrastructure.
 
-### Unmanaged and Managed Compute Services in AWS
-Unmanaged (EC2), Managed, Fully-managed (Lambda).
-
-### AWS Lambda
-Serverless compute service that runs code in response to events.
-
-### Containers and Orchestration on AWS
-Containers package code and dependencies. Containers vs. VMs. Orchestration for scaling.
-
-### AWS Container Services
-Amazon ECS (with EC2 or Fargate), Amazon EKS (with EC2 or Fargate), Amazon ECR.
-
-### Fargate
-Serverless compute engine for containers.
-
-### Additional Compute Services
-Elastic Beanstalk, AWS Batch, Lightsail, Outposts.
+---
 
 ## MODULE 4: Going Global with AWS Infrastructure
 
-### How to Choose a Region or Set of Regions
-Compliance, proximity, feature availability, pricing.
+ ![Cloud Computing Overview](https://png.pngtree.com/png-vector/20250214/ourmid/pngtree-digital-globe-network-representations-global-connectivity-and-technology-png-image_15465980.png)
 
-### AWS Edge Locations
-Smaller footprint facilities that cache items for lower latency.
+Deploying applications across AWS’s worldwide Regions and Availability Zones, while using global services (e.g., CloudFront, Route 53) to ensure low latency, scalability, and high availability for users worldwide.
 
-### Infrastructure as Code and CloudFormation
-Automate deployment of cloud resources for consistent setup.
-
-### Deploying Multi-Region and Multi-AZ Resources
-High availability, agility, elasticity. CloudFront (CDN), Route 53 (DNS).
+---
 
 ## MODULE 5: Networking
+![Cloud Computing Overview](https://img.freepik.com/free-photo/cloud-storage-background-business-network-design_53876-160252.jpg)
 
-### Amazon Virtual Private Cloud (Amazon VPC)
-Logically isolated section of the AWS Cloud. Subnets (public/private).
+setup and management of Virtual Private Clouds (VPCs), subnets, routing, and security to securely connect resources.
+It enables communication between AWS services, on-premises systems, and the internet.
 
-### Connectivity to AWS
-Internet Gateway, Virtual Private Gateways, Virtual Private Network (VPN).
-
-### More Ways to Connect to the AWS Cloud
-AWS Client VPN, AWS Site-to-Site VPN, AWS PrivateLink, AWS Direct Connect.
-
-### Additional Gateway Services
-AWS Transit Gateway, Network Address Translation (NAT) Gateway, Amazon API Gateway.
-
-### Subnets, Security Groups, and Network Access Control Lists
-Network ACLs (subnet level, stateless), Security Groups (resource level, stateful).
-
-### Global Networking
-Edge networking services. Amazon Route 53, Amazon CloudFront, AWS Global Accelerator.
+---
 
 ## MODULE 6: Storage
 
-### Intro to Storage
-Block storage (EC2 instance store, EBS), Object storage (S3), File storage (EFS, FSx).
+![Cloud Computing Overview](https://blog.inbest.cloud/hubfs/iNBest.Cloud-TemplateAlthea/Im%C3%A1genes/Blog/Art%C3%ADculosBlog/administra%20base%20de%20datos%20en%20aws%20600x300px.png)
 
-### Amazon Elastic Block Store (Amazon EBS) Data Lifecycle
-EBS Snapshots for backups and recovery. Amazon Data Lifecycle Manager for automation.
-
-### Amazon Simple Storage Service (S3)
-Fully managed, highly-available object storage. Objects, buckets, benefits.
-
-### Security and Privacy Management (S3)
-Bucket Policies, Identity-Based Policies, Encryption.
-
-### Amazon S3 Storage Classes and S3 Lifecycle
-S3 Standard, Intelligent-Tiering, Standard-IA, One Zone-IA, Express One Zone, Glacier Instant Retrieval, Glacier Flexible Retrieval, Glacier Deep Archive, S3 Outposts. S3 Lifecycle for automation.
-
-### Amazon Elastic File System (Amazon EFS)
-Fully managed, scalable NFS file system. Multi-AZ redundancy, shared access, elastic storage.
-
-### Amazon FSx
-Fully managed file storage for Windows, Lustre, OpenZFS, NetApp ONTAP. File system integration, managed infrastructure, scalable storage, cost effective.
-
-### AWS Storage Gateway
-Hybrid cloud storage service. Seamless integration, improved data management, local caching, cost optimization. Gateway types: S3 File Gateway, Volume Gateway, Tape Gateway.
-
-### AWS Elastic Disaster Recovery
-Replicates critical workloads to AWS with minimal downtime. Business resilience, streamlined disaster recovery, cost optimization.
-
-### Comparing Storage Services
-S3 (object), EBS (block), EFS (file).
+AWS, storage offers scalable services like S3 (object), EBS (block), and EFS (file) to store and manage data.
+It ensures durability, availability, and flexibility for backups, apps, and databases.
+---
 
 ## MODULE 7: Databases
 
-### Intro to Databases
-Relational vs. NoSQL.
+![Cloud Computing Overview](https://img.freepik.com/free-vector/cloud-computing-concept_1284-4091.jpg)
 
-### Relational Database Service (RDS)
-Managed relational database service. Supported engines (Aurora, MySQL, PostgreSQL, etc.). Use cases, benefits (cost optimization, Multi-AZ, performance optimization).
+AWS, database provides managed services like RDS (relational), DynamoDB (NoSQL), and Redshift (data warehouse).
+It enables scalable, secure, and high-performance data storage and retrieval.
 
-### NoSQL Database Service
-Key-value pairs.
-
-### Amazon DynamoDB
-Fully managed NoSQL database service. Use cases, benefits (scalability, consistent high performance, high availability, data encryption).
-
-### In-Memory Caching Services
-Amazon ElastiCache (Redis, Valkey, Memcached). Use cases, benefits (high performance, high availability, replication, data encryption).
-
-### Additional Database Services
-Amazon DocumentDB (MongoDB compatible). AWS Backup. Amazon Neptune (graph database).
+---
 
 ## MODULE 8: AI/Machine Learning & Data Analytics
+![Cloud Computing Overview](https://www.itweb.co.za/static/pictures/2023/08/AI-robot-cloud-2023.jpg)
 
-### Intro to AI/ML & Data Analytics
+AWS, AI/ML & Data Analytics offers services like SageMaker (ML), Rekognition (AI), and Athena/QuickSight (analytics) to build intelligent applications and insights. It enables scalable processing, predictive modeling, and data-driven decision making.
+
 AI (humanlike tasks), ML (training machines with data).
 
-### AI/ML on AWS
-Common ML business use cases (predict trends, make decisions, detect anomalies). AWS AI/ML stack (AI services, ML services, ML frameworks and infrastructure).
 
-### AWS AI/ML Solutions
-Tier 1: Pre-built AWS AI services (Language: Comprehend, Polly, Transcribe, Translate. Computer Vision & Search: Kendra, Rekognition, Textract. Conversational AI & Personalization: Lex, Personalize).
-Tier 2: ML services (Amazon SageMaker AI).
-Tier 3: ML frameworks and infrastructure (PyTorch, Apache M-X Net, TensorFlow, EC2, EMR, ECS).
-
-### Introduction to Generative AI on AWS
-Deep learning, Generative AI (Foundation Models, LLMs). Generative AI on AWS (SageMaker JumpStart, Amazon Bedrock, Amazon Q).
-
-### AWS Generative AI Solutions
-Amazon SageMaker JumpStart (rapid deployments, custom fine-tuned solutions, ML experiments). Amazon Bedrock (enterprise-grade, multimodal content generation, advanced conversational AI). Amazon Q (Q Business, Q Developer).
-
-### Introduction to Data Analytics
-Data pipelines for ETL processes (Extract, Transform, Load). Data analytics (uncover insights).
-
-### Data Pipelines on AWS
-Step 1: Data ingestion (Kinesis Data Streams, Data Firehose).
-Step 2: Data storage (S3, Redshift).
-Step 3: Data cataloging (AWS Glue Data Catalog).
-Step 4: Data processing (AWS Glue, Amazon EMR).
-Step 5: Data analysis and visualization (Athena, Redshift, QuickSight, OpenSearch Service).
-
-### Data Analytics and AI/ML Architecture Diagram
-Example workflow for e-commerce recommendations.
+---
 
 ## MODULE 9: Security on AWS
 
-### Intro to Security
+![Cloud Computing Overview](https://png.pngtree.com/png-vector/20190115/ourmid/pngtree-vector-cloud-setting-icon-png-image_316986.jpg)
+
+
 Authentication and authorization. AWS Shared Responsibility Model (customer: security in the cloud; AWS: security of the cloud). AWS security controls.
+---
+## MODULE 10
 
-### Preventing Unauthorized Access
-AWS Identity and Access Management (IAM) (principle of least privilege). IAM identities (root user, users, groups, roles), IAM policies. Additional access management services (IAM Identity Center, Secrets Manager, Systems Manager).
+### Coming Soon ...
+---
+## MODULE 11
 
-### Protecting Networks and Applications
-Network and application attacks (DoS, DDoS). AWS network and application protection (Security Groups, ELB, AWS Regions). AWS protection through services (AWS Shield, AWS WAF).
+### Coming Soon ...
+---
+## MODULE 13
 
-### Data Protection
-Data encryption (at rest, in transit). AWS data protection (S3, EBS, DynamoDB built-in). AWS data protection services (KMS, Macie, ACM).
-
-### Detecting and Responding to Security Incidents
-Detection and response services (Amazon Inspector, Amazon GuardDuty).
+### Comming Soon ...
