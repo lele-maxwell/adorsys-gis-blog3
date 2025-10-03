@@ -61,6 +61,28 @@ resource "aws_s3_bucket" "blog_cache" {
   bucket = "${var.project_name}-cache"
 }
 
+# ----------------------------------------------------------------
+# NEW: Lifecycle Rule to automatically expire and delete old cache files
+# This prevents the cache bucket from growing indefinitely.
+# ----------------------------------------------------------------
+resource "aws_s3_bucket_lifecycle_configuration" "blog_cache_lifecycle" {
+  bucket = aws_s3_bucket.blog_cache.id
+
+  rule {
+    id     = "expire-old-cache-files"
+    status = "Enabled"
+
+    # This rule applies to all objects in the bucket.
+    filter {}
+
+    # This action specifies that objects will be permanently deleted.
+    expiration {
+      # Objects will be deleted 7 days after they were created.
+      days = 7
+    }
+  }
+}
+
 # -----------------------
 # CloudFront Origin Access Control
 # -----------------------
