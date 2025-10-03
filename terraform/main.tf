@@ -28,6 +28,12 @@ provider "aws" {
   region = "us-east-1" # For CloudFront
 }
 
+## CHANGE: Added a locals block to create a unique suffix for resource names
+locals {
+  # This will be empty for the "default" workspace, and "-<name>" for all others.
+  workspace_suffix = terraform.workspace == "default" ? "" : "-${terraform.workspace}"
+}
+
 resource "random_id" "bucket_suffix" {
   byte_length = 8
 }
@@ -36,7 +42,8 @@ resource "random_id" "bucket_suffix" {
 # S3 Bucket for Next.js PUBLIC ASSETS
 # ----------------------------------------------------
 resource "aws_s3_bucket" "blog_assets" {
-  bucket = "${var.project_name}-assets"
+  ## CHANGE: Appended the workspace suffix to the bucket name for uniqueness.
+  bucket = "${var.project_name}-assets${local.workspace_suffix}"
 }
 
 resource "aws_s3_bucket_ownership_controls" "blog_assets_acl" {
@@ -58,27 +65,28 @@ resource "aws_s3_bucket_public_access_block" "blog_assets_pab" {
 # S3 Bucket for OpenNext INTERNAL CACHE
 # ----------------------------------------------------
 resource "aws_s3_bucket" "blog_cache" {
-  bucket = "${var.project_name}-cache"
+  ## CHANGE: This block will only be created if the workspace is "default".
+  count = terraform.workspace == "default" ? 1 : 0
+
+  ## CHANGE: Appended the workspace suffix.
+  bucket = "${var.project_name}-cache${local.workspace_suffix}"
 }
 
 # ----------------------------------------------------------------
-# NEW: Lifecycle Rule to automatically expire and delete old cache files
-# This prevents the cache bucket from growing indefinitely.
+# Lifecycle Rule for the cache bucket
 # ----------------------------------------------------------------
 resource "aws_s3_bucket_lifecycle_configuration" "blog_cache_lifecycle" {
-  bucket = aws_s3_bucket.blog_cache.id
+  ## CHANGE: This block will also only be created for the "default" workspace.
+  count = terraform.workspace == "default" ? 1 : 0
+
+  bucket = aws_s3_bucket.blog_cache[0].id
 
   rule {
     id     = "expire-old-cache-files"
     status = "Enabled"
-
-    # This rule applies to all objects in the bucket.
     filter {}
-
-    # This action specifies that objects will be permanently deleted.
     expiration {
-      # Objects will be deleted 7 days after they were created.
-      days = 1
+      days = 7
     }
   }
 }
@@ -87,7 +95,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "blog_cache_lifecycle" {
 # CloudFront Origin Access Control
 # -----------------------
 resource "aws_cloudfront_origin_access_control" "blog_oac" {
-  name                              = "${var.project_name}-oac"
+  ## CHANGE: Appended workspace suffix for uniqueness.
+  name = "${var.project_name}-oac${local.workspace_suffix}"
+
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
@@ -98,7 +108,9 @@ resource "aws_cloudfront_origin_access_control" "blog_oac" {
 # Lambda IAM Role and Policies
 # -----------------------
 resource "aws_iam_role" "lambda_role" {
-  name = "${var.project_name}-lambda-role"
+  ## CHANGE: Appended workspace suffix for uniqueness.
+  name = "${var.project_name}-lambda-role${local.workspace_suffix}"
+
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -115,7 +127,10 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
 }
 
 resource "aws_iam_role_policy" "lambda_s3_cache_policy" {
-  name = "${var.project_name}-lambda-s3-cache-policy"
+  ## CHANGE: This block will only be created for the "default" workspace.
+  count = terraform.workspace == "default" ? 1 : 0
+
+  name = "${var.project_name}-lambda-s3-cache-policy${local.workspace_suffix}"
   role = aws_iam_role.lambda_role.id
 
   policy = jsonencode({
@@ -124,19 +139,19 @@ resource "aws_iam_role_policy" "lambda_s3_cache_policy" {
       {
         Effect   = "Allow",
         Action   = ["s3:GetObject", "s3:PutObject"],
-        Resource = "${aws_s3_bucket.blog_cache.arn}/*"
+        Resource = "${aws_s3_bucket.blog_cache[0].arn}/*"
       },
       {
         Effect   = "Allow",
         Action   = "s3:ListBucket",
-        Resource = aws_s3_bucket.blog_cache.arn
+        Resource = aws_s3_bucket.blog_cache[0].arn
       }
     ]
   })
 }
 
 resource "aws_iam_role_policy" "lambda_s3_assets_policy" {
-  name = "${var.project_name}-lambda-s3-assets-policy"
+  name = "${var.project_name}-lambda-s3-assets-policy${local.workspace_suffix}"
   role = aws_iam_role.lambda_role.id
 
   policy = jsonencode({
@@ -151,31 +166,19 @@ resource "aws_iam_role_policy" "lambda_s3_assets_policy" {
   })
 }
 
-# ----------------------------------------------------------------
-# Build Step & Zipping for Main Server Function
-# ----------------------------------------------------------------
+# ... (Build steps and zipping remain the same) ...
 resource "null_resource" "prepare_lambda_source" {
-  triggers = {
-    assets_hash = local.assets_hash
-  }
+  triggers = { assets_hash = local.assets_hash }
   provisioner "local-exec" {
-    command = <<EOT
-      mkdir -p ../.open-next/server-functions/default/public/i18n && \
-      cp -R ../public/i18n/* ../.open-next/server-functions/default/public/i18n/
-    EOT
+    command = "mkdir -p ../.open-next/server-functions/default/public/i18n && cp -R ../public/i18n/* ../.open-next/server-functions/default/public/i18n/"
   }
 }
-
 data "archive_file" "server_function_zip" {
   depends_on  = [null_resource.prepare_lambda_source]
   type        = "zip"
   source_dir  = "../.open-next/server-functions/default"
   output_path = "../server-functions.zip"
 }
-
-# ----------------------------------------------------------------
-# Zipping for Image Optimization Function
-# ----------------------------------------------------------------
 data "archive_file" "image_optimization_zip" {
   type        = "zip"
   source_dir  = "../.open-next/image-optimization-function"
@@ -186,7 +189,9 @@ data "archive_file" "image_optimization_zip" {
 # Main Lambda Function (SSR)
 # -----------------------
 resource "aws_lambda_function" "blog_server" {
-  function_name = "${var.project_name}-server"
+  ## CHANGE: Appended workspace suffix for uniqueness.
+  function_name = "${var.project_name}-server${local.workspace_suffix}"
+
   handler       = "index.handler"
   runtime       = "nodejs20.x"
   role          = aws_iam_role.lambda_role.arn
@@ -198,11 +203,14 @@ resource "aws_lambda_function" "blog_server" {
   timeout          = 30
   memory_size      = 1024
 
+  ## CHANGE: Conditionally set environment variables based on workspace.
   environment {
-    variables = {
-      NODE_ENV            = "production"
-      CACHE_BUCKET_NAME   = aws_s3_bucket.blog_cache.bucket
+    variables = terraform.workspace == "default" ? {
+      NODE_ENV            = "production",
+      CACHE_BUCKET_NAME   = aws_s3_bucket.blog_cache[0].bucket,
       CACHE_BUCKET_REGION = var.aws_region
+      } : {
+      NODE_ENV = "production"
     }
   }
 }
@@ -224,7 +232,9 @@ resource "aws_lambda_function_url" "blog_server_url" {
 # Lambda Function for Next.js Image Optimization
 # ----------------------------------------------------------------
 resource "aws_lambda_function" "blog_image_optimization" {
-  function_name = "${var.project_name}-image-optimization"
+  ## CHANGE: Appended workspace suffix for uniqueness.
+  function_name = "${var.project_name}-image-optimization${local.workspace_suffix}"
+
   handler       = "index.handler"
   runtime       = "nodejs20.x"
   role          = aws_iam_role.lambda_role.arn
@@ -248,19 +258,18 @@ resource "aws_lambda_function_url" "blog_image_optimization_url" {
   authorization_type = "NONE"
 }
 
-# -----------------------
-# S3 Bucket Policy (For ASSETS bucket)
-# -----------------------
+# ... (S3 Policy and Asset Uploads remain the same) ...
 resource "aws_s3_bucket_policy" "blog_assets_policy" {
   depends_on = [aws_s3_bucket_public_access_block.blog_assets_pab]
   bucket     = aws_s3_bucket.blog_assets.id
-
-  policy = jsonencode({
-    Version = "2012-10-17",
+  policy     = jsonencode({
+    Version   = "2012-10-17",
     Statement = [{
-      Sid       = "AllowCloudFrontServicePrincipal",
-      Effect    = "Allow",
-      Principal = { Service = "cloudfront.amazonaws.com" },
+      Sid    = "AllowCloudFrontServicePrincipal",
+      Effect = "Allow",
+      Principal = {
+        Service = "cloudfront.amazonaws.com"
+      },
       Action    = "s3:GetObject",
       Resource  = "${aws_s3_bucket.blog_assets.arn}/*",
       Condition = {
@@ -271,21 +280,15 @@ resource "aws_s3_bucket_policy" "blog_assets_policy" {
     }]
   })
 }
-
-# -----------------------
-# Upload Assets
-# -----------------------
 locals {
   asset_files = fileset("../.open-next/assets", "**/*")
 }
-
 resource "aws_s3_object" "blog_assets_objects" {
-  for_each = { for file in local.asset_files : file => file if !endswith(file, "/") }
-  bucket   = aws_s3_bucket.blog_assets.id
-  key      = each.value
-  source   = "../.open-next/assets/${each.value}"
-  etag     = filemd5("../.open-next/assets/${each.value}")
-
+  for_each     = { for file in local.asset_files : file => file if !endswith(file, "/") }
+  bucket       = aws_s3_bucket.blog_assets.id
+  key          = each.value
+  source       = "../.open-next/assets/${each.value}"
+  etag         = filemd5("../.open-next/assets/${each.value}")
   content_type = lookup({
     ".js"    = "application/javascript",
     ".css"   = "text/css",
@@ -301,30 +304,24 @@ resource "aws_s3_object" "blog_assets_objects" {
     ".ttf"   = "font/ttf",
     ".webp"  = "image/webp",
     ".gif"   = "image/gif"
-  }, try(regex("\\.[^.]+$", each.value), ""), "application/octet-stream")
-
+    }, try(regex("\\.[^.]+$", each.value), ""), "application/octet-stream")
   cache_control = startswith(each.value, "_next/static/") ? "public, max-age=31536000, immutable" : "public, max-age=0, must-revalidate"
 }
 
-# ----------------------------------------------------------------
-# Data Sources & Custom Resource for CloudFront Cache Policies
-# ----------------------------------------------------------------
+# ... (CloudFront Cache Policies remain the same) ...
 data "aws_cloudfront_cache_policy" "caching_disabled" {
   name = "Managed-CachingDisabled"
 }
-
 data "aws_cloudfront_cache_policy" "caching_optimized" {
   name = "Managed-CachingOptimized"
 }
-
-# REPLACED data source with a custom resource for portability
 resource "aws_cloudfront_cache_policy" "image_optimization_policy" {
-  name        = "${var.project_name}-image-optimization-policy"
-  comment     = "Cache policy for Next.js Image Optimization"
+  ## CHANGE: Appended workspace suffix for uniqueness.
+  name    = "${var.project_name}-image-optimization-policy${local.workspace_suffix}"
+  comment = "Cache policy for Next.js Image Optimization"
   default_ttl = 86400
   max_ttl     = 31536000
   min_ttl     = 0
-
   parameters_in_cache_key_and_forwarded_to_origin {
     cookies_config {
       cookie_behavior = "none"
@@ -346,21 +343,22 @@ resource "aws_cloudfront_cache_policy" "image_optimization_policy" {
   }
 }
 
+
 # -----------------------
 # CloudFront Distribution
 # -----------------------
 resource "aws_cloudfront_distribution" "blog_cdn" {
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "blog Next.js App CDN"
+  comment             = "blog Next.js App CDN (${terraform.workspace})"
   default_root_object = ""
 
+  # ... (Origins and Behaviors remain the same, they will just point to the new suffixed resources) ...
   origin {
     origin_id                = "s3-blog-assets"
     domain_name              = aws_s3_bucket.blog_assets.bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.blog_oac.id
   }
-
   origin {
     origin_id   = "lambda-blog-server"
     domain_name = trimsuffix(replace(aws_lambda_function_url.blog_server_url.function_url, "https://", ""), "/")
@@ -371,7 +369,6 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
       origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
-
   origin {
     origin_id   = "lambda-blog-image-optimization"
     domain_name = trimsuffix(replace(aws_lambda_function_url.blog_image_optimization_url.function_url, "https://", ""), "/")
@@ -382,7 +379,6 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
       origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
-
   default_cache_behavior {
     target_origin_id       = "lambda-blog-server"
     viewer_protocol_policy = "redirect-to-https"
@@ -391,7 +387,6 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
     cache_policy_id        = data.aws_cloudfront_cache_policy.caching_disabled.id
   }
-
   ordered_cache_behavior {
     path_pattern           = "_next/image"
     target_origin_id       = "lambda-blog-image-optimization"
@@ -399,10 +394,8 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
     compress               = true
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    # UPDATED to use our custom policy resource
-    cache_policy_id = aws_cloudfront_cache_policy.image_optimization_policy.id
+    cache_policy_id        = aws_cloudfront_cache_policy.image_optimization_policy.id
   }
-
   ordered_cache_behavior {
     path_pattern           = "_next/static/*"
     target_origin_id       = "s3-blog-assets"
@@ -412,7 +405,6 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
     cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
   }
-
   ordered_cache_behavior {
     path_pattern           = "i18n/*"
     target_origin_id       = "s3-blog-assets"
@@ -422,8 +414,6 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
     cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
   }
-
-  # All the following rules for static assets use the CachingOptimized data source
   ordered_cache_behavior {
     path_pattern           = "*.png"
     target_origin_id       = "s3-blog-assets"
@@ -499,56 +489,41 @@ resource "aws_cloudfront_distribution" "blog_cdn" {
   }
 }
 
-# -----------------------------------------------------------------
-# CloudFront Cache Invalidation
-# -----------------------------------------------------------------
+# ... (Invalidation and Outputs remain the same) ...
 locals {
-  assets_hash = md5(jsonencode([
-    for f in local.asset_files : {
-      p = f
-      c = filemd5("../.open-next/assets/${f}")
-    }
-  ]))
+  assets_hash = md5(jsonencode([for f in local.asset_files : {
+    p = f
+    c = filemd5("../.open-next/assets/${f}")
+  }]))
 }
-
 resource "null_resource" "blog_assets_invalidation" {
   triggers = {
     assets_hash = local.assets_hash
   }
-
   provisioner "local-exec" {
     command = "aws cloudfront create-invalidation --distribution-id ${aws_cloudfront_distribution.blog_cdn.id} --paths '/*'"
   }
 }
-
-# -----------------------
-# Outputs
-# -----------------------
 output "cloudfront_url" {
   description = "The URL for the CloudFront distribution."
   value       = "https://${aws_cloudfront_distribution.blog_cdn.domain_name}"
 }
-
 output "s3_bucket" {
   description = "The name of the S3 bucket for static assets."
   value       = aws_s3_bucket.blog_assets.bucket
 }
-
 output "lambda_arn" {
   description = "The ARN of the main Lambda function."
   value       = aws_lambda_function.blog_server.arn
 }
-
 output "lambda_url" {
   description = "The direct function URL for the Lambda (useful for debugging)."
   value       = aws_lambda_function_url.blog_server_url.function_url
 }
-
 output "cache_bucket_name" {
   description = "The name of the S3 bucket used for OpenNext caching."
-  value       = aws_s3_bucket.blog_cache.bucket
+  value       = terraform.workspace == "default" ? aws_s3_bucket.blog_cache[0].bucket : "N/A (caching is disabled for this workspace)"
 }
-
 output "image_optimization_lambda_arn" {
   description = "The ARN of the Image Optimization Lambda function."
   value       = aws_lambda_function.blog_image_optimization.arn
