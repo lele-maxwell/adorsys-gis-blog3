@@ -1,4 +1,13 @@
 terraform {
+  cloud {
+
+    organization = "after-coders"
+
+    workspaces {
+      tags = ["after-coders-workspace"]
+    }
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -76,7 +85,6 @@ resource "aws_s3_bucket" "blog_cache" {
 # Lifecycle Rule for the cache bucket
 # ----------------------------------------------------------------
 resource "aws_s3_bucket_lifecycle_configuration" "blog_cache_lifecycle" {
-  ## CHANGE: This block will also only be created for the "default" workspace.
   count = terraform.workspace == "default" ? 1 : 0
 
   bucket = aws_s3_bucket.blog_cache[0].id
@@ -86,7 +94,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "blog_cache_lifecycle" {
     status = "Enabled"
     filter {}
     expiration {
-      days = 7
+      days = 1
     }
   }
 }
@@ -192,9 +200,9 @@ resource "aws_lambda_function" "blog_server" {
   ## CHANGE: Appended workspace suffix for uniqueness.
   function_name = "${var.project_name}-server${local.workspace_suffix}"
 
-  handler       = "index.handler"
-  runtime       = "nodejs20.x"
-  role          = aws_iam_role.lambda_role.arn
+  handler = "index.handler"
+  runtime = "nodejs20.x"
+  role    = aws_iam_role.lambda_role.arn
 
   filename         = data.archive_file.server_function_zip.output_path
   source_code_hash = data.archive_file.server_function_zip.output_base64sha256
@@ -235,9 +243,9 @@ resource "aws_lambda_function" "blog_image_optimization" {
   ## CHANGE: Appended workspace suffix for uniqueness.
   function_name = "${var.project_name}-image-optimization${local.workspace_suffix}"
 
-  handler       = "index.handler"
-  runtime       = "nodejs20.x"
-  role          = aws_iam_role.lambda_role.arn
+  handler = "index.handler"
+  runtime = "nodejs20.x"
+  role    = aws_iam_role.lambda_role.arn
 
   filename         = data.archive_file.image_optimization_zip.output_path
   source_code_hash = data.archive_file.image_optimization_zip.output_base64sha256
@@ -262,16 +270,16 @@ resource "aws_lambda_function_url" "blog_image_optimization_url" {
 resource "aws_s3_bucket_policy" "blog_assets_policy" {
   depends_on = [aws_s3_bucket_public_access_block.blog_assets_pab]
   bucket     = aws_s3_bucket.blog_assets.id
-  policy     = jsonencode({
-    Version   = "2012-10-17",
+  policy = jsonencode({
+    Version = "2012-10-17",
     Statement = [{
       Sid    = "AllowCloudFrontServicePrincipal",
       Effect = "Allow",
       Principal = {
         Service = "cloudfront.amazonaws.com"
       },
-      Action    = "s3:GetObject",
-      Resource  = "${aws_s3_bucket.blog_assets.arn}/*",
+      Action   = "s3:GetObject",
+      Resource = "${aws_s3_bucket.blog_assets.arn}/*",
       Condition = {
         StringEquals = {
           "AWS:SourceArn" = aws_cloudfront_distribution.blog_cdn.arn
@@ -284,11 +292,11 @@ locals {
   asset_files = fileset("../.open-next/assets", "**/*")
 }
 resource "aws_s3_object" "blog_assets_objects" {
-  for_each     = { for file in local.asset_files : file => file if !endswith(file, "/") }
-  bucket       = aws_s3_bucket.blog_assets.id
-  key          = each.value
-  source       = "../.open-next/assets/${each.value}"
-  etag         = filemd5("../.open-next/assets/${each.value}")
+  for_each = { for file in local.asset_files : file => file if !endswith(file, "/") }
+  bucket   = aws_s3_bucket.blog_assets.id
+  key      = each.value
+  source   = "../.open-next/assets/${each.value}"
+  etag     = filemd5("../.open-next/assets/${each.value}")
   content_type = lookup({
     ".js"    = "application/javascript",
     ".css"   = "text/css",
@@ -304,7 +312,7 @@ resource "aws_s3_object" "blog_assets_objects" {
     ".ttf"   = "font/ttf",
     ".webp"  = "image/webp",
     ".gif"   = "image/gif"
-    }, try(regex("\\.[^.]+$", each.value), ""), "application/octet-stream")
+  }, try(regex("\\.[^.]+$", each.value), ""), "application/octet-stream")
   cache_control = startswith(each.value, "_next/static/") ? "public, max-age=31536000, immutable" : "public, max-age=0, must-revalidate"
 }
 
@@ -317,8 +325,8 @@ data "aws_cloudfront_cache_policy" "caching_optimized" {
 }
 resource "aws_cloudfront_cache_policy" "image_optimization_policy" {
   ## CHANGE: Appended workspace suffix for uniqueness.
-  name    = "${var.project_name}-image-optimization-policy${local.workspace_suffix}"
-  comment = "Cache policy for Next.js Image Optimization"
+  name        = "${var.project_name}-image-optimization-policy${local.workspace_suffix}"
+  comment     = "Cache policy for Next.js Image Optimization"
   default_ttl = 86400
   max_ttl     = 31536000
   min_ttl     = 0
