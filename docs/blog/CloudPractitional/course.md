@@ -600,3 +600,722 @@ AWS automatically protects against low-level, brute-force attacks through its bu
 ### Detecting and Responding to Security Incidents
 -   **Amazon Inspector:** Runs automated security assessments for EC2 instances, containers, and Lambda functions, identifying vulnerabilities.
 -   **Amazon GuardDuty:** Provides intelligent threat detection by continuously monitoring account metadata and network activity, using ML to identify threats.
+
+## MODULE 10: Monitoring, Compliance, and Governance in the AWS Cloud
+
+### Introduction to Governance and Compliance Progression
+
+To effectively monitor your Amazon Web Services (AWS) Cloud solutions, you need ways to provide insights into resource utilization, identify potential issues, and facilitate proactive problem resolution.
+
+The progression you generally want to use is as follows:
+
+1. **Securing systems** - Protect data, systems, and infrastructure from unauthorized access, use, disclosure, disruption, modification, or destruction
+2. **Monitoring activities** - Continuously observe and analyze system activity, network traffic, and security events to detect potential threats or anomalies  
+3. **Conducting audits** - Periodically review and assess the effectiveness of security controls and check that all requirements are met and security policies and procedures are adhered to
+4. **Ensuring compliance** - Help ensure that an organization's security practices and controls meet the requirements of relevant regulations, industry standards, and contractual obligations
+
+### Introduction to Monitoring
+
+Monitoring your cloud resources is important. It provides a way for you to continuously observe and analyze system activity, network traffic, and security events to detect potential threats or anomalies. Monitoring and observability are critical components for ensuring the security, availability, reliability, and performance of your cloud-based workloads and data.
+
+Monitoring is performed using real-time monitoring tools, log collection and analysis, and dashboards.
+
+### Amazon CloudWatch
+
+**Watch over your resources and applications**
+
+CloudWatch monitors your AWS resources and the applications that you run on AWS in real time. With CloudWatch, you gain system-wide visibility into resource utilization, application performance, and operational health. CloudWatch does more than just monitor. It has several features that work together:
+
+- **CloudWatch metrics** - CloudWatch collects metrics from all your AWS resources, applications, and services that run on AWS and on-premises servers
+- **CloudWatch alarms** - With CloudWatch alarms, you can define thresholds on CloudWatch metrics and send notifications or automatically make changes to the resources. For example: "Trigger if CPUUtilization > 80% for 5 minutes". This threshold tells the alarm when to consider something abnormal.
+- **CloudWatch dashboards** - Dashboards are customizable home pages in the CloudWatch console that you can use to monitor your resources in a single view.
+- **CloudWatch logs** - CloudWatch Logs centralize the logs from all of the systems, applications, and AWS services that you use.
+
+**Benefits:** CloudWatch helps you visualize and analyze your resources, operate efficiently with automation, use an integrated view, proactively monitor, and gain insights.
+
+**Use case:** It can be used to monitor and troubleshoot infrastructure.
+
+**Example:** A retail company is using CloudWatch features to monitor their application running on Amazon Elastic Compute Cloud (Amazon EC2) instances. CloudWatch automatically collects metrics, like utilization, on the EC2 instances. The company sets up CloudWatch to collect logs on the application performance. They also have alarms for when the Amazon EC2 utilization gets too high for an extended period. They even have an action configured to automate and scale up the number of EC2 instances when the alarm sounds. Finally, they create a custom dashboard to visualize everything all in one place. Now they can analyze the logs to gain insights on performance issues or application errors.
+
+### AWS CloudTrail
+
+CloudTrail tracks user activity and API usage in the AWS Cloud, on premises, and even with other cloud providers. CloudTrail provides a detailed history of API calls, so you can track changes and identify who made them and when. This helps you understand what actions were taken on your AWS resources.
+
+**Benefits:** CloudTrail provides auditing, security monitoring, and operational troubleshooting. It also helps you prove compliance and improve your security posture.
+
+**Use cases:** It can be used for compliance and auditing, identifying security incidents, troubleshooting operational issues.
+
+#### CloudTrail Features
+
+- **CloudTrail events** - CloudTrail events capture details about actions performed within your AWS account, such as API calls, console actions, or other activities. Event history provides a viewable, searchable, downloadable, and immutable record of the past 90 days of management events in an AWS Region. There are no CloudTrail charges for viewing event history.
+- **CloudTrail logs** - CloudTrail monitors events and delivers those events as log files to your Amazon Simple Storage Service (Amazon S3) bucket. Because CloudTrail logs are securely stored, they can be used to prove compliance with regulations such as Payment Card Industry (PCI) and Healthcare Insurance Portability and Accountability Act (HIPAA).
+- **CloudTrail Insights** - CloudTrail Insights analyzes your normal patterns of API call volume and API error rates. CloudTrail Insights also generates Insights events when API call volumes and error rates deviate from these normal patterns. You can enable CloudTrail Insights in your trails or event data stores to detect anomalous behavior and unusual activity.
+
+### Compliance
+
+#### Benefits of compliance with AWS
+
+Compliance refers to your cloud resources and data adhering to relevant regulations, industry standards, and internal policies regarding security and data protection. AWS helps you meet compliance goals and requirements in the following ways:
+
+- Inheriting the latest security controls that AWS uses on its own infrastructure
+- Third-party validation for thousands of global requirements
+- Streamlining and automating compliance
+- On-demand compliance reports
+
+#### AWS Artifact
+
+AWS Artifact is a service that provides no-cost, on-demand access to AWS security and compliance reports and select online agreements.
+
+**Benefits:** AWS Artifact helps you manage at scale, save time with on-demand access to compliance reports, and deploy with more confidence.
+
+**Use cases:** It can be used to manage select online agreements and assess third-party security and compliance.
+
+AWS Artifact consists of two types: AWS Artifact agreements and AWS Artifact reports.
+
+##### AWS Artifact Agreements
+Suppose that your company needs to sign an agreement with AWS regarding your use of certain types of information throughout AWS services. You can do this through AWS Artifact Agreements.
+
+In AWS Artifact Agreements, you can review, accept, and manage agreements for an individual account and for all your accounts in AWS Organizations. Different types of agreements are offered to address the needs of customers who are subject to specific regulations, such as the Health Insurance Portability and Accountability Act (HIPAA).
+
+##### AWS Artifact Reports
+Next, suppose that a member of your company's development team is building an application and needs more information about their responsibility for complying with certain regulatory standards. You can advise them to access this information in AWS Artifact Reports.
+
+AWS Artifact Reports provide compliance reports from third-party auditors. These auditors have tested and verified that AWS is compliant with a variety of global, regional, and industry-specific security standards and regulations. AWS Artifact Reports remains up to date with the latest reports released. You can provide the AWS audit artifacts to your auditors or regulators as evidence of AWS security controls.
+
+### Auditing AWS Resources for Compliance
+
+Most companies will want you to follow specific configuration guidelines for your different AWS resources. This means that you will want a way to assess and audit the resources that you create on AWS to help ensure that they meet those rules. That's where AWS Config can help.
+
+#### AWS Config
+
+AWS Config is a service that you can use to assess, audit, and evaluate the configurations of your AWS resources.
+
+**Benefits:** AWS Config helps evaluate configurations against a desired state, manage resource configuration changes, and simplify troubleshooting and remediation.
+
+**Use cases:** It can be used to continually audit security monitoring and analysis and to streamline operational troubleshooting and change management.
+
+#### AWS Audit Manager
+
+Audit Manager is a service that continually audits your AWS usage to simplify risk and compliance assessment. It helps collect evidence and manage audit data.
+
+**Benefits:** Audit Manager saves time with automated evidence collection, streamlines collaboration across teams, and helps ensure integrity of audits with read-only permissions.
+
+**Use case:** It can be used to automate evidence collection, continually audit to assess compliance, and deploy internal risk assessments.
+
+### AWS Organizations
+
+As companies grow and scale, the management and governance of disparate AWS accounts can be a challenge. That's where AWS Organizations can help.
+
+Organizations helps you centrally manage and govern your environment as you grow and scale your AWS resources. It helps you manage policies for groups of accounts and automate account creation.
+
+**Benefits:** Organizations provides several benefits like quickly scaling your environment by programmatically creating new AWS accounts for resources and teams. It also helps by simplifying permission management through SCPs and managing and optimizing costs across your AWS accounts and resources.
+
+**Use cases:** It can be used for automating AWS account creation, providing tools and access for your security teams, controlling user access to designated services, and sharing common resources across accounts.
+
+#### Key concepts of Organizations
+
+An organization is a collection of AWS accounts that you can manage centrally and organize into a hierarchical, tree-like structure with a root at the top and organizational units (OUs) nested under the root. Each account can be located directly in the root or placed in one of the OUs in the hierarchy.
+
+##### Definition of terms
+
+- **AWS Organizations** - Used to consolidate and manage multiple AWS accounts within a central location. When you create an organization, it automatically creates a root, which is the parent container for all the accounts in your organization.
+- **Management account** - The central AWS account that creates and manages the organization. It's responsible for overall control and governance.
+- **Organizational unit (OU)** - A logical grouping of accounts in an AWS Organization. OUs can contain member accounts or nested OUs.
+- **Service control policies (SCP)** - A policy that lets you place restrictions on the AWS services, resources, and individual API actions that users and roles in each account can access. SCPs can be applied to either OUs or individual member accounts.
+- **Member account not in an OU** - If you have a member account that has unique requirements that do not overlap with those of an organizational unit, you can add them to the organization. They do not have to be placed under an OU. This account can still take advantage of benefits such as consolidated billing.
+
+### Governance
+
+As an organization scales up, they could have difficulty governing the services and accounts, including the new AWS accounts, the AWS services they choose, and even the software licenses.
+
+#### AWS Control Tower
+
+AWS Control Tower is a service you can use to enforce and manage governance rules for security, operations, and compliance at scale across all your organizations and accounts in the AWS Cloud.
+
+**Benefits:** AWS Control Tower can help you save time while providing governance. It uses preconfigured controls, which can help you to quickly set up multi-account environments, automation with built-in governance, and integration of third-party software at scale.
+
+**Use cases:** Use AWS Control Tower to quickly deploy applications and provision compliant AWS accounts.
+
+##### AWS Control Tower features
+
+- **Dashboard** - The AWS Control Tower dashboard provides continuous oversight to see provisioned accounts across your enterprise. AWS Control Tower also has controls for policy enforcement and can help detect noncompliant resources.
+- **Account Factory** - The AWS Control Tower Account Factory is a configurable account template that standardizes the provisioning of new accounts.
+- **Controls** - Controls, sometimes called guardrails, are high-level rules that provide governance for your overall AWS environment.
+- **Landing zone** - A landing zone is a well-architected multi-account environment that's based on security and compliance best practices. It's the enterprise-wide container that holds all of the organizational units (OUs), accounts, users, and resources you want to regulate for compliance.
+
+#### AWS Service Catalog
+
+With Service Catalog, you can create, share, and organize from a curated catalog of AWS resources. You can deploy baseline networking resources and security tools for new AWS accounts so you can govern consistently.
+
+**Benefits:** Service Catalog saves time by making it quick to find and deploy approved, self-service cloud resources. It also helps you stay agile while improving governance over resources across multiple accounts.
+
+**Use cases:** Use it to provision resources across AWS accounts, apply access controls, and accelerate provisioning of continuous integration and continuous delivery (CI/CD) pipelines.
+
+When companies move from on premises to the cloud, they must decide how to handle their software licenses. With AWS Bring Your Own License model (BYOL), they can use existing software licenses purchased directly from vendors, such as Microsoft, on AWS services like Amazon EC2 Dedicated Hosts and Amazon WorkSpaces. This can result in significant cost savings compared to purchasing licenses directly from AWS. By using BYOL with existing licenses in a cloud environment, you get flexibility and potential optimized costs. The service that helps you manage and govern your software licenses is AWS License Manager.
+
+#### AWS License Manager
+
+License Manager is a service that helps you manage your software licenses and fine-tune your licensing costs.
+
+**Benefits:** License Manager helps with visibility and control, tracking and managing licenses, and reducing the risk of noncompliance with licenses.
+
+**Use cases:** Use it to streamline license management and to simplify the Microsoft License Mobility through Software Assurance experience. You can also use it to automate the distribution and activation of software entitlements across AWS accounts for end users.
+
+Managing software licenses can be time consuming, costly, and difficult to enforce. License Manager helps reduce the risk of noncompliance by enforcing license usage limits, blocking new launches, and using other controls.
+
+#### Governance Services Review
+
+- **AWS Control Tower** - A service you can use to set up and govern a secure, compliant, multi-account AWS environment based on best practices
+- **Service Catalog** - A service you can use to create, share, and organize AWS services and resources from a curated catalog that you define
+- **License Manager** - A service that helps you manage your software licenses and fine-tune licensing costs
+
+### Health of your AWS Cloud resources
+
+#### Notifications on service events
+
+AWS Health is the go-to data source for events and changes affecting the health of your AWS Cloud resources. It notifies you about service events, planned changes, and account notifications to help you manage and take actions.
+
+#### AWS Health Dashboard
+
+With AWS Health Dashboard, you can view account-specific health information and get AWS Health event updates. You can also use AWS Health programmatically using the AWS Health API, which is available with AWS Premium Support.
+
+**Benefits:** AWS Health Dashboard provides valuable information as a data source for events and changes. It gives you timely and actionable guidance to remedy issues. It also helps manage service health and is integrated and automated to use at scale.
+
+**Use cases:** Use AWS Health Dashboard to view account-specific health information. You can also use it to plan for lifecycle events or troubleshoot an incident.
+
+### AWS Trusted Advisor
+
+**Continuously evaluating your AWS environment to improve security, cost optimization, performance, and resilience**
+
+#### Trusted Advisor
+
+Optimizing large scale cloud deployments is extremely important to do, and it's not a one-time thing. You must look for ways to optimize for costs, performance, security, and resilience. With AWS Trusted Advisor, you can continuously evaluate your AWS environment by using best practice checks across several categories. All AWS Support plans include access to dozens of Trusted Advisor checks. With Business Support and other advanced plans, you can benefit from hundreds of checks.
+
+**Benefits:** Trusted Advisor helps you align with AWS best practices, prioritize recommendations, and optimize your AWS resources at scale.
+
+**Use cases:** It can be used to optimize cost, efficiency, security, improve performance, and track service limits.
+
+Although Trusted Advisor does check to optimize security, you might need help to check the fine-grained permissions of your AWS Identity and Access Management (IAM). IAM Access Analyzer can help meet your goals for least privilege access within your AWS environment.
+
+#### IAM Access Analyzer
+
+IAM Access Analyzer provides capabilities to set, verify, and refine permissions by analyzing external access and validating that your policies match your corporate security standards.
+
+**Benefits:** IAM Access Analyzer provides benefits like refining permissions, validating IAM policies, helping you meet your least privilege goals, and automating IAM policy reviews.
+
+**Use cases:** It can be used to set fine-grained permissions, verify who can access what, remediate unused access, and refine and remove broad access.
+
+## MODULE 11: Pricing and Support
+
+In these next lessons, you will learn about essential pricing concepts, tools, and strategies for effectively tracking and controlling your AWS spending.
+
+### Three Key Concepts of How You Pay for AWS
+
+#### Pay as you go
+With pay as you go, you can adapt to changing business needs and reduce the risk of overprovisioning or missing capacity.
+
+#### Save when you commit
+For certain services, such as Compute services on AWS, Savings Plans offer savings over On-Demand prices when you commit to a 1-year or 3-year plan.
+
+#### Pay less by using more
+With AWS, you can realize important savings as your usage increases. For some services, pricing is tiered, meaning the more you use, the less you pay.
+
+### Driving Factors of Cost
+
+The pricing of AWS services varies based on several factors, such as service category or type, configuration, AWS Region, and which pricing model you choose. Refer to the pricing tab on a service's webpage for details on its specific pricing factors.
+
+There are three fundamental drivers of cost with AWS: compute, storage, and outbound data transfer. These driving factors impact AWS service categories in different ways.
+
+#### Compute
+For compute resources, you pay by a certain span of time, like by the hour or by the second. Unless you've made a reservation for which the cost is agreed upon beforehand, you pay from the time you launch a resource until the time you stop the instance.
+
+#### Storage
+You can choose from a broad portfolio of storage solutions with deep functionality for storing, accessing, protecting, and analyzing data. Pricing for storage largely depends on how much storage you have provisioned or how much you are using.
+
+For some storage options, such as Amazon Simple Storage Service (Amazon S3), storage cost is tiered. This means you can optimize storage costs based on how frequently and quickly you need to access data. With Amazon S3, consider the following six cost components when storing and managing customer data:
+
+- Storage pricing
+- Request and data retrieval pricing
+- Data transfer and transfer acceleration pricing
+- Data management and analytics pricing
+- Replication pricing
+- The price to process your data with Amazon S3 Object Lambda
+
+#### Data transfer
+In most cases, there is no charge for inbound data transfer or for data transfer between AWS services within the same Region. There are some exceptions, so be sure to verify data transfer rates before beginning.
+
+**Outbound data transfer** is aggregated across services and then charged at the outbound data transfer rate. The more data you transfer, the less you pay per gigabyte. For data storage and transfer, you typically pay per gigabyte.
+
+### AWS Pricing and Billing Services
+
+Let's talk about billing options for AWS accounts: single or consolidated. With a single account, it's all encompassed in that one account. Use AWS services. Deploy workloads. Receive a bill for what you use. Rinse and repeat every month.
+
+For consolidated account billing, it's ever so slightly more complex. With this approach, you use multiple AWS accounts. One is a primary and the others are subaccounts linked to the primary account.
+
+#### AWS Organizations
+AWS Organizations provides centralized management and governance of your AWS environment. Using AWS Organizations, you can create, group, and manage accounts. You can also apply security policies at the account level and consolidate billing with multiple accounts using a single payment method.
+
+**Use cases:**
+- Consolidate multiple AWS accounts into one central organization
+- Implement organization-wide policies
+
+#### AWS Billing and Cost Management dashboard
+The AWS Billing and Cost Management dashboard centralizes cost management, showing current charges, usage, forecasts, and detailed breakdowns. It also provides tools to manage payments, view invoices, set budgets, and consolidate billing.
+
+**Use cases:**
+- Use helpful visualizations and billing reports of monthly AWS spend
+- Set up and manage payment methods
+
+#### AWS Budgets
+AWS Budgets helps set custom budgets and sends alerts when costs, usage, or Savings Plans and Reserved Instances (RIs) utilization or coverage exceed defined thresholds.
+
+**Use cases:**
+- Set up alerts for when projected costs exceed predefined thresholds
+- Forecast future expenses based on current usage trends
+
+#### AWS Cost Explorer
+AWS Cost Explorer helps visualize, analyze, and manage AWS costs and usage with interactive graphs, reports, and forecasts. It provides insights into spending patterns, trends, and Reserved Instance recommendations.
+
+**Use cases:**
+- Analyze historical spending trends to identify cost-saving opportunities
+- Forecast future AWS costs based on current usage patterns to budget effectively
+
+#### AWS Pricing Calculator
+Another helpful tool is the AWS Pricing Calculator. The AWS Pricing Calculator is a web-based planning tool that you can use to create estimates. You input specific configurations such as instance types, storage options, and data transfer volumes. Then, based on your configurations, you receive a detailed cost breakdown to help you budget for your AWS resource allocation.
+
+**Use cases:**
+- Estimate potential costs before deployment
+- Compare costs of different AWS services and configurations
+
+### AWS Support Plans
+
+| Feature | Basic Support | Developer Support | Business Support | Enterprise On-Ramp Support | Enterprise Support |
+|----------|----------------|------------------|------------------|-----------------------------|--------------------|
+| **Availability** | Included for all AWS customers | Recommended for experimenting or testing in AWS | Recommended minimum tier for production workloads in AWS | Recommended for production and business-critical workloads in AWS | Recommended for business-critical and mission-critical workloads in AWS |
+| **Access** | Includes access to documentation, whitepapers, and AWS re:Post | Response times:<br>• < 24 hours for general guidance<br>• < 12 hours when systems impaired | Response times:<br>• *Includes previous plan response times*<br>• < 4 hours when production system impaired<br>• < 1 hour when production system is down | Response times:<br>• *Includes previous plan response times*<br>• < 30 minutes when business-critical system is down | Response times:<br>• *Includes previous plan response times*<br>• < 15 minutes when business- or mission-critical system is down |
+| **Trusted Advisor** | Core AWS Trusted Advisor checks | Core AWS Trusted Advisor checks | Full set of AWS Trusted Advisor checks | Full set of AWS Trusted Advisor checks | Full set of AWS Trusted Advisor checks and prioritized recommendations by AWS account team |
+| **Technical Account Management** | Not included | Not included | Not included | A pool of technical account managers (TAMs) provide proactive guidance | A designated TAM provides consultative architectural and operational guidance |
+
+### AWS Marketplace and AWS Partners
+
+#### AWS Marketplace
+The AWS Marketplace is a digital catalog that includes thousands of software listings from independent software vendors. You can use AWS Marketplace to find, test, and buy software that runs on AWS. For each listing in AWS Marketplace, you can access detailed information on pricing options and reviews from other AWS customers. Solutions and services offered in the AWS Marketplace include the following:
+
+- **Software as a service (SaaS):**
+  - Business applications such as project management tools
+  - Marketing tools such as customer engagement platforms
+  - Collaboration tools such as file sharing services
+
+- **Machine learning (ML) and AI:**
+  - Prebuilt models for image recognition, natural language processing, and more
+  - ML algorithms for training custom models
+
+- **Data and analytics:**
+  - Business intelligence platforms for visualization and reporting
+  - Data integration tools
+
+#### AWS Partner Network
+The AWS Partner Network (APN) is a global community that uses AWS technologies, programs, expertise, and tools to build solutions and services for customers. Together, partners and AWS provide innovative solutions, solve technical challenges, and deliver customer value.
+
+You can work with AWS Partners to create or use specialized solutions that are tailored to your unique business needs. For example, a retail company might use AWS to host their website. They could then work with an AWS Partner who specializes in advanced analytics and machine learning to improve customer personalization on that website.
+
+- **Funding benefits:** As businesses join the AWS Partner Network and participate in specific programs available to AWS Partners, they can unlock various funding benefits to help build, market, and sell with AWS
+- **AWS Partner events:** AWS Partner events include webinars, virtual workshops, and in-person learning opportunities. You can use AWS Partner events to network with other partners, learn more about new or current offerings, and collaborate with AWS experts.
+- **AWS Partner Training and Certification:** Take advantage of unique, partner-centered offerings from AWS Training and Certification. From certification to a specific service or learning objective, the AWS Partner training portfolio has numerous opportunities to upskill your cloud knowledge.
+
+## MODULE 12: Migrations
+
+AWS helps guide companies through the cloud migration process. This process has **three main phases**, each supported by AWS tools and services.
+
+### Introduction to Migration
+
+### 1. Assess Phase
+
+**Goal:** Understand your current environment and build the business case for moving to AWS.
+
+**Key activity:** Assess readiness and costs.
+**Main tool:** **Migration Evaluator** – analyzes your existing setup and estimates AWS costs.
+
+### 2. Mobilize Phase
+
+**Goal:** Prepare your organization, people, and resources for migration.
+
+**Key activities:** Plan your migration and discover on-premises systems.
+**Main tools:**
+
+* **Application Discovery Service** – finds your servers, applications, and dependencies.
+* **Migration Hub** – central place to plan and track your migration.
+
+### 3. Migrate and Modernize Phase
+
+**Goal:** Move workloads to AWS and modernize them.
+
+**Key tools:**
+
+* **Application Migration Service** – moves applications to AWS with minimal downtime.
+* **Database Migration Service (DMS)** – migrates databases.
+* **Data transfer tools:** **DataSync**, **Transfer Family**, and **Snow Family** for online or offline data transfer.
+
+### AWS Cloud Adoption Framework (AWS CAF)
+
+**Purpose:**
+The **AWS Cloud Adoption Framework (CAF)** helps organizations plan and manage their migration by providing best practices, structure, and guidance. It ensures alignment between business goals, people, and technology during the move to AWS.
+
+**Benefits:**
+
+* Reduces business risk and migration complexity
+* Improves efficiency, productivity, and customer experience
+* Supports innovation and cost reduction
+* Aligns teams and strategies across the organization
+
+**Use cases:**
+
+* Migrating legacy systems and infrastructure
+* Optimizing operations and business processes
+* Enabling new cloud-based business models
+
+### AWS CAF Perspectives
+
+The AWS CAF organizes migration planning into **six key perspectives** — each focused on a different part of the organization.
+
+#### 1. Business Perspective
+
+Ensures IT efforts align with business goals and investments.
+**Key roles:** Business managers, finance teams, strategy stakeholders.
+
+#### 2. People Perspective
+
+Focuses on change management, training, and organizational readiness.
+**Key roles:** HR, staffing, people managers.
+
+#### 3. Governance Perspective
+
+Aligns IT and business strategies while managing risk and compliance.
+**Key roles:** CIOs, program managers, enterprise architects.
+
+#### 4. Platform Perspective
+
+Guides the technical design of your AWS environment.
+**Key roles:** CTOs, IT managers, solutions architects.
+
+#### 5. Security Perspective
+
+Ensures data protection, compliance, and visibility in the cloud.
+**Key roles:** CISOs, IT security managers, analysts.
+
+#### 6. Operations Perspective
+
+Defines how you run and support workloads after migration.
+**Key roles:** IT operations and support managers.
+
+### Seven Migration Strategies
+
+When migrating applications to the cloud, organizations commonly use **seven strategies**. The choice depends on factors like application complexity, business goals, timeline, and available resources. Often, a mix of strategies is used across an organization's application portfolio.
+
+#### 1. Relocate
+
+Move applications to the cloud **as-is** by changing their hosting location.
+**Example:** Virtual machines or containers running on-premises are moved to the cloud.
+
+#### 2. Rehost (Lift-and-Shift)
+
+Move applications to the cloud **without changing them**.
+**Use case:** Large legacy migrations where speed and scalability are important. Most applications in such migrations are rehosted.
+
+#### 3. Replatform (Lift, Tinker, and Shift)
+
+Make **small optimizations** to applications while moving them to the cloud.
+**Goal:** Gain benefits like cost savings or performance improvements without changing the core architecture.
+
+#### 4. Refactor (Re-architect)
+
+Redesign applications to **fully leverage cloud features**.
+**Goal:** Add features, scale, or improve performance that isn't possible in the current environment.
+
+#### 5. Repurchase
+
+Move from traditional licensed software to **SaaS (Software-as-a-Service)**.
+**Example:** Replacing an on-premises CRM with a cloud-based CRM like Salesforce.
+
+#### 6. Retain
+
+Keep certain applications **on-premises** temporarily.
+**Use case:** Critical apps that need major changes or aren't ready to migrate yet.
+
+#### 7. Retire
+
+Remove applications that are **no longer needed**.
+**Goal:** Simplify your portfolio and reduce costs.
+
+**Summary:**
+These strategies help organizations **plan the best migration approach** for each application, balancing speed, cost, and business goals.
+
+### Migration Services and Tools
+
+When a business wants to move its applications and data to the cloud (for example, from their own servers to AWS), that process is called a **migration**. AWS provides **tools and services** to help through each stage of the migration journey.
+
+#### The Cloud Migration Journey
+
+There are **three main phases**:
+
+1. **Assess** – Understand what you have and build a business case for moving.
+2. **Mobilize** – Plan your migration and get everything ready.
+3. **Migrate and Modernize** – Move your applications and data to the cloud and improve them.
+
+#### 1. Assess Phase
+
+**Goal:** Understand your current setup and estimate what moving to the cloud will cost.
+
+##### Migration Evaluator
+
+* **What it does:** Analyzes your current IT environment (servers, databases, licenses, etc.) and helps estimate cloud costs.
+* **Why it's useful:** Removes guesswork. Shows cost scenarios and how to reuse existing software licenses to save money.
+* **Use cases:**
+  * See what servers and software you're using now.
+  * Understand dependencies between servers.
+  * Get a cost estimate for different migration options.
+
+**In short:** Migration Evaluator = your cost and readiness calculator for the cloud.
+
+#### 2. Mobilize Phase
+
+**Goal:** Plan and organize your migration.
+
+Here, you often use two tools:
+
+##### Application Discovery Service
+
+* **What it does:** Scans your current servers and finds what applications are running, how they connect, and how they perform.
+* **Why it's useful:** Gives you a complete picture of what's on-premises before you move.
+* **Use cases:**
+  * Inventory all your servers and applications.
+  * Map dependencies (which app talks to which database).
+  * Plan migration order and steps.
+
+**In short:** Application Discovery Service = your "X-ray machine" for existing systems.
+
+##### Migration Hub
+
+* **What it does:** Central place to manage and track all your migration activities.
+* **Why it's useful:** Gives you visibility into every phase — from discovery to completion — and offers built-in guidance.
+* **Bonus:** It's free to use.
+* **Use cases:**
+  * Track progress of multiple migration projects.
+  * Collaborate with teams.
+  * Get AWS recommendations for modernization.
+
+**In short:** Migration Hub = your migration command center.
+
+#### 3. Migrate and Modernize Phase
+
+**Goal:** Actually move your apps and improve them while minimizing disruption.
+
+##### Application Migration Service
+
+* **What it does:** Copies (replicates) your applications from on-premises servers to AWS automatically.
+* **Why it's useful:** You can migrate apps without taking them offline, saving time and reducing downtime.
+* **Use cases:**
+  * Move apps from physical servers or other clouds to AWS.
+  * Modernize applications during migration.
+  * Move workloads between AWS Regions.
+
+**In short:** Application Migration Service = the "mover" that safely transfers your applications to AWS.
+
+### Migration and Modernization Competency Partners
+
+If you don't have in-house experts, AWS has certified partners — companies that specialize in helping customers migrate and modernize workloads. You can find partners for specific stages (like assessment, planning, or modernization).
+
+**In short:** Competency Partners = expert helpers for your migration journey.
+
+### Database Migrations
+
+AWS Database Migration Service (DMS) helps you migrate databases to AWS quickly and securely. The source database remains fully operational during the migration, minimizing downtime to applications that rely on the database.
+
+### Transferring Data to and from the AWS Cloud
+
+#### Online Data Transfer
+
+When moving data to AWS, you can transfer it **online** using several AWS services. Key things to think about:
+
+* **Security:** Keep data safe.
+* **Data validation:** Make sure nothing is lost.
+* **Scheduling:** Choose the right time to move data.
+* **Bandwidth:** Check your network speed.
+
+##### AWS DataSync
+
+**Purpose:** Moves large amounts of data quickly and securely between on-premises systems and AWS (like Amazon S3).
+
+**Benefits:**
+
+* Fast and automated
+* Secure and reliable
+* Can schedule transfers and control bandwidth
+
+**Use cases:** Moving, archiving, or syncing data between your data center and AWS.
+
+**In short:** DataSync = fast and automated data transfer.
+
+##### AWS Transfer Family
+
+**Purpose:** Handles **file transfers** to and from AWS using common protocols like **FTP**, **SFTP**, and **FTPS**.
+
+**Benefits:**
+
+* Easy to set up
+* Secure (encrypted and authenticated)
+* Scales automatically
+
+**Use cases:** Sharing files, replacing old file servers, or connecting business systems to AWS.
+
+**In short:** Transfer Family = secure and simple file transfers.
+
+##### AWS Direct Connect
+
+**Purpose:** Creates a **private network connection** between your data center and AWS.
+
+**Benefits:**
+
+* Fast and reliable
+* Lower network costs
+* Consistent performance
+
+**Use cases:** Large or sensitive data transfers, hybrid cloud setups.
+
+**In short:** Direct Connect = private, high-speed connection to AWS.
+
+#### Transferring Data Offline
+
+##### Why Transfer Data Offline?
+
+Most customers move data **online**, but sometimes **offline transfer** is better — for example:
+
+* Limited or no internet connection
+* Remote locations
+* Very large data volumes (petabytes) that would take too long to send online
+
+In these cases, AWS provides **physical devices** that you can fill with data and ship back to AWS for upload.
+
+##### AWS Snowball Edge Storage Optimized
+
+**Purpose:**
+A physical device used to move large amounts of data to AWS **without the internet**.
+
+**How it works:**
+You order a Snowball Edge device → copy your data onto it → ship it back to AWS → AWS uploads your data to the cloud.
+
+**Benefits:**
+
+* High-speed data transfer (gigabytes per second)
+* Large storage capacity
+* Works even when offline
+* Rugged and secure
+
+**Use cases:**
+
+* Moving petabytes of data from remote sites
+* Temporary edge computing (processing data locally before sending it to AWS)
+* Secure, offline data migration
+
+**In short:**
+**Snowball Edge = portable, high-speed device for offline data transfer.**
+
+## MODULE 13: Well-Architected Solutions
+
+AWS offers a wide range of **purpose-built services** for specific use cases. This module covers four types of specialized services:
+
+1. Development Services
+2. Business Application Services
+3. End-User Computing Services
+4. IoT Services
+
+### 1. Development Services
+
+These services help developers **build, deploy, and manage applications** on AWS.
+
+#### AWS CodeBuild
+
+* Fully managed CI service that compiles code, runs tests, and creates deployment packages.
+* Automatically scales; you pay only for build time.
+
+#### AWS CodePipeline
+
+* Fully managed CI/CD service that automates build, test, and deployment.
+* Streamlines software delivery and reduces the need for server management.
+
+#### AWS X-Ray
+
+* Tracing and debugging tool for analyzing application performance.
+* Helps identify bottlenecks and optimize applications.
+
+#### AWS AppSync
+
+* Fully managed GraphQL service to connect frontend apps with multiple backend data sources.
+* Allows clients to request only the data they need.
+
+#### AWS Amplify
+
+* Framework for building and managing secure full-stack applications.
+* Provides features like authentication, APIs, storage, and hosting with minimal infrastructure setup.
+
+### 2. Business Application Services
+
+These services support **business operations** such as customer service and email management.
+
+#### Amazon Connect
+
+* AI-powered contact center service for scalable customer service.
+* Features call routing, recording, analytics, and integration with AWS services.
+
+#### Amazon Simple Email Service (SES)
+
+* Scalable email service for high-volume transactional and marketing emails.
+* Helps optimize delivery and engagement.
+
+### 3. End-User Computing Services
+
+These services provide **remote access to desktops and applications**.
+
+#### Amazon AppStream 2.0
+
+* Streams applications from the cloud to any device.
+* No need for high-end local hardware; supports SaaS apps and desktop conversions.
+
+#### Amazon WorkSpaces
+
+* Cloud-based virtual desktops accessible from any internet-connected device.
+* Employees can work as if on a physical office PC.
+
+#### Amazon WorkSpaces Secure Browser
+
+* Managed remote browser for secure access to websites and SaaS apps.
+* No need for client software, VPN, or extra infrastructure.
+
+### 4. IoT Services
+
+IoT connects physical devices to the cloud, allowing **remote monitoring and control**.
+
+#### AWS IoT Core
+
+* Securely connects devices to cloud applications.
+* Supports data ingestion, processing, and action on device data with encryption and multiple protocols.
+
+**Example IoT Solutions:**
+
+* Smart security cameras: send alerts to your phone
+* Smart pet feeders: control feeding remotely
+* Smart irrigation systems: adjust watering based on weather and soil conditions
+
+---
+
+## Course Summary
+
+This comprehensive AWS Cloud Practitioner course has covered the essential concepts and services needed to understand cloud computing on AWS. From basic cloud concepts to advanced services like AI/ML, security, monitoring, and migrations, you now have a solid foundation in:
+
+- **Core AWS Services**: Compute (EC2), Storage (S3), Networking (VPC), and Databases (RDS, DynamoDB)
+- **Security and Compliance**: IAM, encryption, monitoring, and governance
+- **Cost Management**: Pricing models, budgeting, and optimization strategies
+- **Migration Strategies**: Planning and executing cloud migrations
+- **Specialized Services**: AI/ML, IoT, development tools, and business applications
+
+This knowledge prepares you for real-world cloud implementations and the AWS Cloud Practitioner certification exam.

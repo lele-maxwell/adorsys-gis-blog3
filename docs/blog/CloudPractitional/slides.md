@@ -88,15 +88,50 @@ AI (humanlike tasks), ML (training machines with data).
 
 
 Authentication and authorization. AWS Shared Responsibility Model (customer: security in the cloud; AWS: security of the cloud). AWS security controls.
----
-## MODULE 10
 
-### Comming Soon ...
 ---
-## MODULE 11
 
-### Comming Soon ...
+## MODULE 10: Monitoring, Compliance, and Governance
+
+![Monitoring and Governance](https://aws.criticalcloud.ai/content/images/size/w1200/2025/05/image-1746301342544.jpeg)
+
+AWS monitoring, compliance, and governance provide tools to observe system performance, ensure regulatory adherence, and manage resources at scale across multiple accounts and environments.
+
 ---
-## MODULE 13
 
-### Coming Soon ...
+## MODULE 11: Pricing and Support
+
+![AWS Pricing](https://i.ytimg.com/vi/6Jg8AlrQrSM/maxresdefault.jpg)
+
+AWS pricing and support covers cost management strategies, billing tools, and technical assistance plans to optimize spending and ensure reliable cloud operations with appropriate guidance levels.
+
+---
+
+## MODULE 12: Migrations
+
+![Cloud Migration](https://emaster.cloud/wp-content/uploads/sites/10/2023/06/aws-server-migration-service.jpg)
+
+AWS migrations involve moving applications, data, and workloads from on-premises or other cloud environments to AWS using structured approaches, tools, and strategies for successful cloud adoption.
+
+---
+
+## MODULE 13: Well-Architected Solutions
+
+![Specialized Services](https://proskale.com/wp-content/uploads/2023/10/The-6-Pillars-of-the-AWS-Well-Architected-Framework.jpg)
+
+AWS well-architected solutions encompass purpose-built services for development, business applications, end-user computing, and IoT to address specific use cases and industry requirements efficiently.
+
+---
+
+## Course Complete! 🎉
+
+![Success](https://img-c.udemycdn.com/course/750x422/5376292_a768_2.jpg)
+
+**You've mastered AWS Cloud Practitioner essentials:**
+- Core Services (EC2, S3, VPC, RDS)
+- Security & Compliance (IAM, encryption)
+- Cost Management & Support
+- Migration Strategies
+- Specialized Services (AI/ML, IoT, Development)
+
+**Ready for:** Real-world implementations & AWS certification! 🚀
