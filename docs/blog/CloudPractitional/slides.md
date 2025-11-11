@@ -59,6 +59,7 @@ It enables communication between AWS services, on-premises systems, and the inte
 
 ![Cloud Computing Overview](https://blog.inbest.cloud/hubfs/iNBest.Cloud-TemplateAlthea/Im%C3%A1genes/Blog/Art%C3%ADculosBlog/administra%20base%20de%20datos%20en%20aws%20600x300px.png)
 
+
 AWS, storage offers scalable services like S3 (object), EBS (block), and EFS (file) to store and manage data.
 It ensures durability, availability, and flexibility for backups, apps, and databases.
 ---
@@ -84,7 +85,7 @@ AI (humanlike tasks), ML (training machines with data).
 
 ## MODULE 9: Security on AWS
 
-![Cloud Computing Overview](https://png.pngtree.com/png-vector/20190115/ourmid/pngtree-vector-cloud-setting-icon-png-image_316986.jpg)
+![Cloud Computing Overview](https://cdn.prod.website-files.com/5ff66329429d880392f6cba2/6690dd237e2bdd5702c01e8c_1%20-%2012.07-min.jpg)
 
 
 Authentication and authorization. AWS Shared Responsibility Model (customer: security in the cloud; AWS: security of the cloud). AWS security controls.
